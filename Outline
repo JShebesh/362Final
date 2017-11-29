@@ -1,0 +1,16 @@
+My_variables:   SECTION
+    ;timer
+    ;rti information
+My_constants:   SECTION
+Port_t:   equ $240
+ddr_t:    equ $242
+Port_s:   equ $248
+ddr_s:    equ $24A
+
+
+My_code:  SECTION
+entry:
+  ;welcome screen
+    ;include a song
+    ;display led combination
+    ;
