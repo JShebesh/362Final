@@ -1,5 +1,5 @@
-
-PROGRAM "C:\Users\ahagyous\Desktop\New folder\lab6_3\bin\Project.abs"
+*** EVALUATION ***
+PROGRAM "C:\Users\justedwa\Desktop\362Final-master\FinalProject_Work\bin\Project.abs"
 
 *********************************************************************************************
 TARGET SECTION
@@ -7,13 +7,17 @@ TARGET SECTION
 Processor   : Freescale HC12
 Memory Model: SMALL
 File Format : ELF\DWARF 2.0
-Linker      : SmartLinker V-5.0.36 Build 9056, Feb 26 2009
+Linker      : SmartLinker V-5.0.40 Build 10203, Jul 23 2010
 
 *********************************************************************************************
 FILE SECTION
 ---------------------------------------------------------------------------------------------
 main.asm.o                              Model: SMALL,         Lang: Assembler
+lcddisp.c.o                             Model: SMALL,         Lang: ANSI-C
 mc9s12e128.c.o                          Model: SMALL,         Lang: ANSI-C
+fertilize.asm.o                         Model: SMALL,         Lang: Assembler
+newcrop.asm.o                           Model: SMALL,         Lang: Assembler
+drawscreen.asm.o                        Model: SMALL,         Lang: Assembler
 
 *********************************************************************************************
 STARTUP SECTION
@@ -24,7 +28,8 @@ Entry point: 0xC000 (_Startup)
 SECTION-ALLOCATION SECTION
 Section Name                    Size  Type     From       To       Segment
 ---------------------------------------------------------------------------------------------
-.init                            165     R     0xC000     0xC0A4   ROM_C000
+.init                            331     R     0xC000     0xC14A   ROM_C000
+.text                            212     R     0xC14B     0xC21E   ROM_C000
 .stack                           256   R/W      0x400      0x4FF   RAM
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg0
 .abs_section_9                     1   N/I        0x9        0x9   .absSeg1
@@ -299,12 +304,17 @@ Section Name                    Size  Type     From       To       Segment
 .abs_section_27a                   2   N/I      0x27A      0x27B   .absSeg270
 .abs_section_27c                   2   N/I      0x27C      0x27D   .absSeg271
 .abs_section_27e                   2   N/I      0x27E      0x27F   .absSeg272
-my_variable                       33   R/W      0x500      0x520   RAM
+.bss                               2   R/W      0x500      0x501   RAM
+my_constants                     224     R     0xC21F     0xC2FE   ROM_C000
+my_variable                       35   R/W      0x502      0x524   RAM
+fertilize.asm._SEC000000          22     R     0xC2FF     0xC314   ROM_C000
+newcrop.asm._SEC000000            79     R     0xC315     0xC363   ROM_C000
+drawscreen.asm._SEC000000         20     R     0xC364     0xC377   ROM_C000
 .vectSeg273_vect                   2     R     0xFFFE     0xFFFF   .vectSeg273
 
 Summary of section sizes per section type:
-READ_ONLY (R):          A7 (dec:      167)
-READ_WRITE (R/W):      121 (dec:      289)
+READ_ONLY (R):         37A (dec:      890)
+READ_WRITE (R/W):      125 (dec:      293)
 NO_INIT (N/I):         160 (dec:      352)
 
 *********************************************************************************************
@@ -319,10 +329,46 @@ OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 MODULE:                 -- main.asm.o --
 - PROCEDURES:
-     Entry                                     C000      A5     165       0   .init       
+     Entry                                     C000      D8     216       0   .init       
      _Startup                                  C000       0       0       0   .init       
+     nextpat                                   C0D8       7       7       0   .init       
+     setup                                     C0DF       F      15       0   .init       
+     start                                     C0EE       A      10       0   .init       
+     b1                                        C0F8       7       7       0   .init       
+     nxt                                       C0FF       B      11       0   .init       
+     rst                                       C10A       0       0       0   .init       
+     Keyboard                                  C10A       3       3       3   .init       
+     scan                                      C10D      1C      28       0   .init       
+     Search                                    C129       5       5       1   .init       
+     top                                       C12E       7       7       0   .init       
+     check                                     C135       C      12       0   .init       
+     match                                     C141       1       1       0   .init       
+     delay                                     C142       4       4       3   .init       
+     loop                                      C146       5       5       0   .init       
 - VARIABLES:
-     disp                                       500      21      33      33   my_variable 
+     disp                                       502      21      33      37   my_variable 
+     menuNum                                    523       1       1       0   my_variable 
+     gamestate                                  524       1       1       4   my_variable 
+     welcome                                   C21F      21      33       1   my_constants
+     mainmenu                                  C240      21      33       2   my_constants
+     sub2                                      C261      21      33       1   my_constants
+     sub1                                      C282      21      33       1   my_constants
+     err1                                      C2A3      21      33       1   my_constants
+     err2                                      C2C4      21      33       1   my_constants
+     ledpat                                    C2E5       5       5       1   my_constants
+     Kseq                                      C2EA       5       5       1   my_constants
+     table                                     C2EF      10      16       1   my_constants
+- LABELS:
+     __SEG_END_SSTACK                           500       0       0       1               
+MODULE:                 -- lcddisp.c.o --
+- PROCEDURES:
+     delay_ms                                  C14B      17      23       5   .text       
+     init_LCD                                  C162      52      82       1   .text       
+     display_string                            C1B4      38      56       6   .text       
+     epulse                                    C1EC      24      36       3   .text       
+     sendCommand                               C210       F      15       7   .text       
+- VARIABLES:
+     data                                       500       2       2       4   .bss        
 MODULE:                 -- mc9s12e128.c.o --
 - PROCEDURES:
 - VARIABLES:
@@ -494,9 +540,9 @@ MODULE:                 -- mc9s12e128.c.o --
      _PERS                                      24C       1       1       0   .abs_section_24c
      _PPSS                                      24D       1       1       0   .abs_section_24d
      _WOMS                                      24E       1       1       0   .abs_section_24e
-     _PTM                                       250       1       1       0   .abs_section_250
+     _PTM                                       250       1       1       5   .abs_section_250
      _PTIM                                      251       1       1       0   .abs_section_251
-     _DDRM                                      252       1       1       0   .abs_section_252
+     _DDRM                                      252       1       1       1   .abs_section_252
      _RDRM                                      253       1       1       0   .abs_section_253
      _PERM                                      254       1       1       0   .abs_section_254
      _PPSM                                      255       1       1       0   .abs_section_255
@@ -591,30 +637,61 @@ MODULE:                 -- mc9s12e128.c.o --
      _PMFCNTC                                   232       2       2       0   .abs_section_232
      _PMFMODC                                   234       2       2       0   .abs_section_234
      _PMFDTMC                                   236       2       2       0   .abs_section_236
-     _PTAD                                      270       2       2       0   .abs_section_270
+     _PTAD                                      270       2       2       4   .abs_section_270
      _PTIAD                                     272       2       2       0   .abs_section_272
-     _DDRAD                                     274       2       2       0   .abs_section_274
+     _DDRAD                                     274       2       2       1   .abs_section_274
      _RDRAD                                     276       2       2       0   .abs_section_276
      _PERAD                                     278       2       2       0   .abs_section_278
      _PPSAD                                     27A       2       2       0   .abs_section_27a
      _PIEAD                                     27C       2       2       0   .abs_section_27c
      _PIFAD                                     27E       2       2       0   .abs_section_27e
+MODULE:                 -- fertilize.asm.o --
+- PROCEDURES:
+     fertilize                                 C2FF       F      15       1   fertilize.asm._SEC000000
+     error                                     C30E       7       7       0   fertilize.asm._SEC000000
+- VARIABLES:
+MODULE:                 -- newcrop.asm.o --
+- PROCEDURES:
+     newcrop                                   C315       7       7       1   newcrop.asm._SEC000000
+     klp                                       C31C      13      19       0   newcrop.asm._SEC000000
+     plant                                     C32F      19      25       0   newcrop.asm._SEC000000
+     plow                                      C348       6       6       0   newcrop.asm._SEC000000
+     pl1                                       C34E       F      15       0   newcrop.asm._SEC000000
+     error1                                    C35D       7       7       0   newcrop.asm._SEC000000
+- VARIABLES:
+MODULE:                 -- drawscreen.asm.o --
+- PROCEDURES:
+     drawscreen                                C364       8       8       4   drawscreen.asm._SEC000000
+     lp2                                       C36C       3       3       0   drawscreen.asm._SEC000000
+     lp1                                       C36F       9       9       0   drawscreen.asm._SEC000000
+- VARIABLES:
 
 *********************************************************************************************
 MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
-  main.asm.o                                  33    165      0
+  main.asm.o                                  35    331    224
+  lcddisp.c.o                                  2    212      0
   mc9s12e128.c.o                             352      0      0
+  fertilize.asm.o                              0     22      0
+  newcrop.asm.o                                0     79      0
+  drawscreen.asm.o                             0     20      0
   other                                      256      2      0
 
 *********************************************************************************************
 SECTION USE IN OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
+SECTION: ".text"
+  delay_ms init_LCD display_string epulse sendCommand 
+SECTION: ".bss"
+  data 
 SECTION: ".init"
-  _Startup Entry 
+  _Startup Entry nextpat setup start b1 nxt Keyboard rst scan Search top check 
+  match delay loop 
+SECTION: "my_constants"
+  welcome mainmenu sub2 sub1 err1 err2 ledpat Kseq table 
 SECTION: "my_variable"
-  disp 
+  disp menuNum gamestate 
 SECTION: ".abs_section_8"
   _PORTE 
 SECTION: ".abs_section_9"
@@ -1161,6 +1238,12 @@ SECTION: ".abs_section_27c"
   _PIEAD 
 SECTION: ".abs_section_27e"
   _PIFAD 
+SECTION: "fertilize.asm._SEC000000"
+  fertilize error 
+SECTION: "newcrop.asm._SEC000000"
+  newcrop klp plant plow pl1 error1 
+SECTION: "drawscreen.asm._SEC000000"
+  drawscreen lp2 lp1 
 
 *********************************************************************************************
 OBJECT LIST SORTED BY ADDRESS
@@ -1405,9 +1488,9 @@ OBJECT LIST SORTED BY ADDRESS
      _PERS                                      24C       1       1       0   .abs_section_24c
      _PPSS                                      24D       1       1       0   .abs_section_24d
      _WOMS                                      24E       1       1       0   .abs_section_24e
-     _PTM                                       250       1       1       0   .abs_section_250
+     _PTM                                       250       1       1       5   .abs_section_250
      _PTIM                                      251       1       1       0   .abs_section_251
-     _DDRM                                      252       1       1       0   .abs_section_252
+     _DDRM                                      252       1       1       1   .abs_section_252
      _RDRM                                      253       1       1       0   .abs_section_253
      _PERM                                      254       1       1       0   .abs_section_254
      _PPSM                                      255       1       1       0   .abs_section_255
@@ -1431,21 +1514,69 @@ OBJECT LIST SORTED BY ADDRESS
      _PERU                                      26C       1       1       0   .abs_section_26c
      _PPSU                                      26D       1       1       0   .abs_section_26d
      _MODRR                                     26E       1       1       0   .abs_section_26e
-     _PTAD                                      270       2       2       0   .abs_section_270
+     _PTAD                                      270       2       2       4   .abs_section_270
      _PTIAD                                     272       2       2       0   .abs_section_272
-     _DDRAD                                     274       2       2       0   .abs_section_274
+     _DDRAD                                     274       2       2       1   .abs_section_274
      _RDRAD                                     276       2       2       0   .abs_section_276
      _PERAD                                     278       2       2       0   .abs_section_278
      _PPSAD                                     27A       2       2       0   .abs_section_27a
      _PIEAD                                     27C       2       2       0   .abs_section_27c
      _PIFAD                                     27E       2       2       0   .abs_section_27e
-     disp                                       500      21      33      33   my_variable 
+     data                                       500       2       2       4   .bss        
+     disp                                       502      21      33      37   my_variable 
+     menuNum                                    523       1       1       0   my_variable 
+     gamestate                                  524       1       1       4   my_variable 
      _Startup                                  C000       0       0       0   .init       
-     Entry                                     C000      A5     165       0   .init       
+     Entry                                     C000      D8     216       0   .init       
+     nextpat                                   C0D8       7       7       0   .init       
+     setup                                     C0DF       F      15       0   .init       
+     start                                     C0EE       A      10       0   .init       
+     b1                                        C0F8       7       7       0   .init       
+     nxt                                       C0FF       B      11       0   .init       
+     Keyboard                                  C10A       3       3       3   .init       
+     rst                                       C10A       0       0       0   .init       
+     scan                                      C10D      1C      28       0   .init       
+     Search                                    C129       5       5       1   .init       
+     top                                       C12E       7       7       0   .init       
+     check                                     C135       C      12       0   .init       
+     match                                     C141       1       1       0   .init       
+     delay                                     C142       4       4       3   .init       
+     loop                                      C146       5       5       0   .init       
+     delay_ms                                  C14B      17      23       5   .text       
+     init_LCD                                  C162      52      82       1   .text       
+     display_string                            C1B4      38      56       6   .text       
+     epulse                                    C1EC      24      36       3   .text       
+     sendCommand                               C210       F      15       7   .text       
+     welcome                                   C21F      21      33       1   my_constants
+     mainmenu                                  C240      21      33       2   my_constants
+     sub2                                      C261      21      33       1   my_constants
+     sub1                                      C282      21      33       1   my_constants
+     err1                                      C2A3      21      33       1   my_constants
+     err2                                      C2C4      21      33       1   my_constants
+     ledpat                                    C2E5       5       5       1   my_constants
+     Kseq                                      C2EA       5       5       1   my_constants
+     table                                     C2EF      10      16       1   my_constants
+     fertilize                                 C2FF       F      15       1   fertilize.asm._SEC000000
+     error                                     C30E       7       7       0   fertilize.asm._SEC000000
+     newcrop                                   C315       7       7       1   newcrop.asm._SEC000000
+     klp                                       C31C      13      19       0   newcrop.asm._SEC000000
+     plant                                     C32F      19      25       0   newcrop.asm._SEC000000
+     plow                                      C348       6       6       0   newcrop.asm._SEC000000
+     pl1                                       C34E       F      15       0   newcrop.asm._SEC000000
+     error1                                    C35D       7       7       0   newcrop.asm._SEC000000
+     drawscreen                                C364       8       8       4   drawscreen.asm._SEC000000
+     lp2                                       C36C       3       3       0   drawscreen.asm._SEC000000
+     lp1                                       C36F       9       9       0   drawscreen.asm._SEC000000
 
 *********************************************************************************************
 UNUSED-OBJECTS SECTION
 ---------------------------------------------------------------------------------------------
+NOT USED PROCEDURES
+lcddisp.c.o:
+  Delay 
+NOT USED VARIABLES
+main.asm.o:
+  pot_value 
 
 *********************************************************************************************
 COPYDOWN SECTION
@@ -1454,7 +1585,30 @@ COPYDOWN SECTION
 *********************************************************************************************
 OBJECT-DEPENDENCIES SECTION
 ---------------------------------------------------------------------------------------------
-Entry                     USES disp 
+Entry                     USES disp gamestate __SEG_END_SSTACK init_LCD 
+                                welcome display_string ledpat 
+setup                     USES delay mainmenu display_string 
+start                     USES Keyboard fertilize 
+b1                        USES newcrop 
+nxt                       USES mainmenu display_string 
+Keyboard                  USES Kseq 
+scan                      USES delay Search 
+Search                    USES table 
+check                     USES delay 
+init_LCD                  USES _DDRAD _PTAD _DDRM delay_ms _PTM data 
+                                sendCommand epulse 
+display_string            USES sendCommand data _PTAD epulse 
+epulse                    USES data _PTM delay_ms 
+sendCommand               USES data _PTAD epulse 
+fertilize                 USES gamestate sub1 display_string Keyboard 
+error                     USES err1 drawscreen 
+newcrop                   USES gamestate 
+klp                       USES sub2 display_string Keyboard 
+plant                     USES disp drawscreen gamestate 
+plow                      USES disp 
+pl1                       USES disp drawscreen 
+error1                    USES err2 drawscreen 
+drawscreen                USES display_string 
 
 *********************************************************************************************
 DEPENDENCY TREE
@@ -1465,6 +1619,6 @@ STATISTIC SECTION
 
 ExeFile:
 --------
-Number of blocks to be downloaded: 2
-Total size of all blocks to be downloaded: 167
+Number of blocks to be downloaded: 5
+Total size of all blocks to be downloaded: 890
 
