@@ -7302,7 +7302,7 @@ mPMFDTMC_PMFDTMC11:                      equ        This_symb_has_been_depreciat
 
 
 ; export symbols
-            XDEF Entry, _Startup, gamestate,Keyboard,err1,err2,sub2,sub1,disp
+            XDEF Entry,timer,RTI_ISR,CRGFLG,tON,fertscreen, wtrscreen, _Startup, err3, gamestate,Keyboard,err1,err2,sub2,sub1,disp,port_t
             ; we use export 'Entry' as symbol. This allows us to
             ; reference 'Entry' either in the linker .prm file
             ; or from C/C++ later on
@@ -7322,6 +7322,9 @@ my_variable: SECTION
 disp:	ds.b 33
 menuNum: ds.b 1
 gamestate: ds.b 1
+timer ds.b 1
+Counter ds.b 1
+tON ds.b 1
 my_constants: SECTION
 welcome dc.b    "    Welcome         Farmtek     ",0
 mainmenu  dc.b  "(A)Fertilize    (B)New Crop     ",0
@@ -7329,6 +7332,9 @@ sub2 dc.b       "(A)Plow         (B)Plant        ",0
 sub1 dc.b       "(A)Fertilize    (B)Water        ",0
 err1 dc.b       "Plant Crop      to Continue     ",0
 err2 dc.b       "Crop Already    Planted         ",0
+err3 dc.b 		"Field not       Plowed          ",0
+fertscreen dc.b "Fertilizing                     ",0
+wtrscreen dc.b  "Watering                        ",0
 ledpat dc.b $24,$81,$18,$FF,$00
 port_s equ $248
 s_DDR equ  $24A
@@ -7340,6 +7346,7 @@ port_t equ $240
 t_DDR equ $242
 Kseq dc.b $70,$B0,$D0,$E0,$FF
 table dc.b $eb,$77,$7b,$7d,$b7,$bb,$bd,$d7,$db,$dd,$e7,$ed,$7e,$be,$de,$ee
+ 
 
 ; code section
 MyCode:     SECTION
@@ -7378,9 +7385,14 @@ _Startup:
            movb #' ',disp+30
            movb #' ',disp+31
            movb #0,disp+32    ;string terminator, acts like '\0'
-
+           movb #$00,Counter
+           movb #00,timer
+           movb #5,tON
+    movb #$00,Counter
+    movb #$80,CRGINT
+    movb #$60,RTICTL
     movb #$00,gamestate
-    bset t_DDR,%00100000
+    bset t_DDR,%00101000
     movb #$F0,$26A
     movb #$F0,$26D
     movb #$0F,$26C
@@ -7407,6 +7419,7 @@ setup:
     ;Display Main Menu
     ldd #mainmenu
     jsr display_string
+    CLI
 
 
 
@@ -7466,4 +7479,33 @@ loop: dey
       puly
       rts
 
+
+
+
+
+RTI_ISR:
+        ldaa Counter
+        inca
+        staa Counter
+        cmpa tON
+        ble  s1
+        cmpa #15
+        ble s2
+        ldaa #$00
+        staa Counter
+        movb #$80,CRGFLG
+        RTI
+        s1:
+           bset port_t,#%00001000
+           movb #$80,CRGFLG
+           RTI
+        s2:
+           bclr port_t,#%00001000
+           movb #$80,CRGFLG
+           RTI
+		;endDC:
+		;	movb #0,timer
+		;	movb #$80,CRGFLG
+		;	SEI
+		;	RTI
 

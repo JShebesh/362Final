@@ -5,7 +5,7 @@ drawscreen:
     pshy
     pshx
     jsr display_string
-    ldx #100
+    ldx #50
 lp2:
     ldy #10000
 lp1:
