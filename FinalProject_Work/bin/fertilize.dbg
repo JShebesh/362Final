@@ -1,5 +1,5 @@
     XDEF fertilize
-    XREF gamestate,tON,fertscreen,wtrscreen,display_string,Keyboard,err1,sub1,drawscreen
+    XREF gamestate,drawDL,rtiCtrl,port_t,tON,fertscreen,wtrscreen,display_string,Keyboard,err1,sub1,drawscreen
 		
 fertilize:
     ldab gamestate
@@ -18,17 +18,25 @@ fl1:
 
 
 fert:
-	ldd #fertscreen
-	movb #$02,tON
-	CLI
+	  ldd #fertscreen
+	  movb #08,tON
+	  movb #01,rtiCtrl
+	  movw #200,drawDL
     jsr drawscreen
+    bclr port_t,#%00001000
+    movb #00,rtiCtrl
+    movw #100,drawDL
     rts
 
 wtr:
    	ldd #wtrscreen
-   	movb #$08,tON
-   	CLI
+   	movb #32,tON
+   	movb #01,rtiCtrl
+   	movw #200,drawDL
    	jsr drawscreen
+   	movw #00,rtiCtrl
+   	bclr port_t,#%00001000
+   	movb #100,drawDL
     rts
     
 error:

@@ -1,11 +1,11 @@
     XDEF drawscreen
-    XREF display_string
+    XREF display_string,drawDL
  
 drawscreen:
     pshy
     pshx
     jsr display_string
-    ldx #50
+    ldx drawDL
 lp2:
     ldy #10000
 lp1:

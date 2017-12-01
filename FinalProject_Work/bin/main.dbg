@@ -7302,7 +7302,7 @@ mPMFDTMC_PMFDTMC11:                      equ        This_symb_has_been_depreciat
 
 
 ; export symbols
-            XDEF Entry,timer,RTI_ISR,CRGFLG,tON,fertscreen, wtrscreen, _Startup, err3, gamestate,Keyboard,err1,err2,sub2,sub1,disp,port_t
+            XDEF Entry,timer,drawDL,rtiCtrl,port_t,RTI_ISR,CRGFLG,tON,fertscreen, wtrscreen, _Startup, err3, gamestate,Keyboard,err1,err2,sub2,sub1,disp,port_t
             ; we use export 'Entry' as symbol. This allows us to
             ; reference 'Entry' either in the linker .prm file
             ; or from C/C++ later on
@@ -7322,9 +7322,12 @@ my_variable: SECTION
 disp:	ds.b 33
 menuNum: ds.b 1
 gamestate: ds.b 1
-timer ds.b 1
+timer ds.w 1
+seconds ds.w 1
 Counter ds.b 1
 tON ds.b 1
+rtiCtrl ds.b 1
+drawDL ds.w 1
 my_constants: SECTION
 welcome dc.b    "    Welcome         Farmtek     ",0
 mainmenu  dc.b  "(A)Fertilize    (B)New Crop     ",0
@@ -7352,6 +7355,8 @@ table dc.b $eb,$77,$7b,$7d,$b7,$bb,$bd,$d7,$db,$dd,$e7,$ed,$7e,$be,$de,$ee
 MyCode:     SECTION
 Entry:
 _Startup:
+           movw #100,drawDL
+           movb #%00000000,rtiCtrl
            movb #' ',disp
            movb #' ',disp+1
            movb #' ',disp+2
@@ -7386,13 +7391,14 @@ _Startup:
            movb #' ',disp+31
            movb #0,disp+32    ;string terminator, acts like '\0'
            movb #$00,Counter
-           movb #00,timer
+           movw #0000,timer
+           movw #0000,seconds
            movb #5,tON
     movb #$00,Counter
     movb #$80,CRGINT
-    movb #$60,RTICTL
+    movb #$40,RTICTL
     movb #$00,gamestate
-    bset t_DDR,%00101000
+    bset t_DDR,#%00101000
     movb #$F0,$26A
     movb #$F0,$26D
     movb #$0F,$26C
@@ -7419,7 +7425,6 @@ setup:
     ;Display Main Menu
     ldd #mainmenu
     jsr display_string
-    CLI
 
 
 
@@ -7484,28 +7489,50 @@ loop: dey
 
 
 RTI_ISR:
+        ldaa rtiCtrl
+        cmpa #1
+        beq DCmtr
+timing:
+        ldd timer
+        clc
+        incb
+        bne nocarry1
+        inca
+nocarry1:
+        std timer        
+        cpd #$03E8
+        bne  endrti
+        movw #$0000,timer
+        ldd seconds
+        clc
+        incb
+        bne nocarry2
+        inca
+nocarry2: 
+        std seconds
+endrti:
+        movb #$80,CRGFLG
+        RTI
+
+
+
+
+DCmtr:
         ldaa Counter
         inca
         staa Counter
         cmpa tON
         ble  s1
-        cmpa #15
+        cmpa #60
         ble s2
         ldaa #$00
         staa Counter
         movb #$80,CRGFLG
-        RTI
+        bra timing
         s1:
            bset port_t,#%00001000
-           movb #$80,CRGFLG
-           RTI
+           bra timing
         s2:
            bclr port_t,#%00001000
-           movb #$80,CRGFLG
-           RTI
-		;endDC:
-		;	movb #0,timer
-		;	movb #$80,CRGFLG
-		;	SEI
-		;	RTI
+           bra timing
 

@@ -1,10 +1,11 @@
     XDEF newcrop
-    XREF gamestate,display_string,Keyboard,err2,err3,sub2,drawscreen,disp,__SEG_END_SSTACK
+    XREF gamestate,drawDL,display_string,Keyboard,err2,err3,sub2,drawscreen,disp,__SEG_END_SSTACK
 		
 newcrop:
     ldab gamestate
     cmpb #2
-    beq error1  
+    beq error1
+    movw #25,drawDL  
 klp:
     ldd #sub2
     jsr display_string
@@ -31,6 +32,8 @@ pl2:
      dey
      bne pl2
      movb #$02,gamestate
+     cli
+     movw #100,drawDL
      rts
     
     
