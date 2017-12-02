@@ -15,7 +15,7 @@
             ; reference 'Entry' either in the linker .prm file
             ; or from C/C++ later on
 
-            XREF __SEG_END_SSTACK,display_string,pot_value,read_pot,init_LCD,SendsChr,PlayTone,fertilize,newcrop,drawscreen      ; symbol defined by the linker for the end of the stack
+            XREF __SEG_END_SSTACK,growth,display_string,pot_value,read_pot,init_LCD,SendsChr,PlayTone,fertilize,newcrop,drawscreen      ; symbol defined by the linker for the end of the stack
             
             ; LCD References
 	         
@@ -218,10 +218,10 @@ nocarry1:
         inca
 nocarry2: 
         std seconds
+        jsr growth
 endrti:
         movb #$80,CRGFLG
         RTI
-
 
 
 

@@ -4,7 +4,7 @@
 fertilize:
     ldab gamestate
     cmpb #$02
-    bne error
+    blt error
     ldd #sub1
     jsr display_string
 fl1:

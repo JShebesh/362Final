@@ -4,7 +4,7 @@
 newcrop:
     ldab gamestate
     cmpb #2
-    lbeq error1
+    lbge error1
     movw #25,drawDL  
 klp:
     ldd #sub2
@@ -92,10 +92,12 @@ space2:
     
 error1:
     ldd #err2
+    movw #100,drawDL
     jsr drawscreen
     rts
 error2:
 	ldd #err3
+	movw #100,drawDL
 	jsr drawscreen
 	jmp klp
 	

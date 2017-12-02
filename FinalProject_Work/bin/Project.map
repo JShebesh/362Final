@@ -18,6 +18,7 @@ mc9s12e128.c.o                          Model: SMALL,         Lang: ANSI-C
 fertilize.asm.o                         Model: SMALL,         Lang: Assembler
 newcrop.asm.o                           Model: SMALL,         Lang: Assembler
 drawscreen.asm.o                        Model: SMALL,         Lang: Assembler
+growth.asm.o                            Model: SMALL,         Lang: Assembler
 
 *********************************************************************************************
 STARTUP SECTION
@@ -28,8 +29,8 @@ Entry point: 0xC000 (_Startup)
 SECTION-ALLOCATION SECTION
 Section Name                    Size  Type     From       To       Segment
 ---------------------------------------------------------------------------------------------
-.init                            467     R     0xC000     0xC1D2   ROM_C000
-.text                            212     R     0xC1D3     0xC2A6   ROM_C000
+.init                            470     R     0xC000     0xC1D5   ROM_C000
+.text                            212     R     0xC1D6     0xC2A9   ROM_C000
 .stack                           256   R/W      0x400      0x4FF   RAM
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg0
 .abs_section_9                     1   N/I        0x9        0x9   .absSeg1
@@ -305,16 +306,17 @@ Section Name                    Size  Type     From       To       Segment
 .abs_section_27c                   2   N/I      0x27C      0x27D   .absSeg271
 .abs_section_27e                   2   N/I      0x27E      0x27F   .absSeg272
 .bss                               2   R/W      0x500      0x501   RAM
-my_constants                     323     R     0xC2A7     0xC3E9   ROM_C000
+my_constants                     323     R     0xC2AA     0xC3EC   ROM_C000
 my_variable                       44   R/W      0x502      0x52D   RAM
-fertilize.asm._SEC000000         108     R     0xC3EA     0xC455   ROM_C000
-newcrop.asm._SEC000000           191     R     0xC456     0xC514   ROM_C000
-drawscreen.asm._SEC000000         20     R     0xC515     0xC528   ROM_C000
+fertilize.asm._SEC000000         108     R     0xC3ED     0xC458   ROM_C000
+newcrop.asm._SEC000000           203     R     0xC459     0xC523   ROM_C000
+drawscreen.asm._SEC000000         20     R     0xC524     0xC537   ROM_C000
+growth.asm._SEC000000            368     R     0xC538     0xC6A7   ROM_C000
 .vectSeg273_vect                   2     R     0xFFF0     0xFFF1   .vectSeg273
 .vectSeg274_vect                   2     R     0xFFFE     0xFFFF   .vectSeg274
 
 Summary of section sizes per section type:
-READ_ONLY (R):         52D (dec:     1325)
+READ_ONLY (R):         6AC (dec:     1708)
 READ_WRITE (R/W):      12E (dec:      302)
 NO_INIT (N/I):         160 (dec:      352)
 
@@ -350,44 +352,44 @@ MODULE:                 -- main.asm.o --
      RTI_ISR                                   C17B       7       7       0   .init       
      timing                                    C182       9       9       0   .init       
      nocarry1                                  C18B      17      23       0   .init       
-     nocarry2                                  C1A2       3       3       0   .init       
-     endrti                                    C1A5       6       6       0   .init       
-     DCmtr                                     C1AB      1C      28       0   .init       
-     s1                                        C1C7       6       6       0   .init       
-     s2                                        C1CD       6       6       0   .init       
+     nocarry2                                  C1A2       6       6       0   .init       
+     endrti                                    C1A8       6       6       0   .init       
+     DCmtr                                     C1AE      1C      28       0   .init       
+     s1                                        C1CA       6       6       0   .init       
+     s2                                        C1D0       6       6       0   .init       
 - VARIABLES:
-     disp                                       502      21      33      41   my_variable 
+     disp                                       502      21      33     107   my_variable 
      menuNum                                    523       1       1       0   my_variable 
-     gamestate                                  524       1       1       6   my_variable 
+     gamestate                                  524       1       1       9   my_variable 
      timer                                      525       2       2       4   my_variable 
      seconds                                    527       2       2       3   my_variable 
      Counter                                    529       1       1       5   my_variable 
      tON                                        52A       1       1       4   my_variable 
      rtiCtrl                                    52B       1       1       6   my_variable 
-     drawDL                                     52C       2       2       8   my_variable 
-     welcome                                   C2A7      21      33       1   my_constants
-     mainmenu                                  C2C8      21      33       2   my_constants
-     sub2                                      C2E9      21      33       1   my_constants
-     sub1                                      C30A      21      33       1   my_constants
-     err1                                      C32B      21      33       1   my_constants
-     err2                                      C34C      21      33       1   my_constants
-     err3                                      C36D      21      33       1   my_constants
-     fertscreen                                C38E      21      33       1   my_constants
-     wtrscreen                                 C3AF      21      33       1   my_constants
-     ledpat                                    C3D0       5       5       1   my_constants
-     Kseq                                      C3D5       5       5       1   my_constants
-     table                                     C3DA      10      16       1   my_constants
+     drawDL                                     52C       2       2      10   my_variable 
+     welcome                                   C2AA      21      33       1   my_constants
+     mainmenu                                  C2CB      21      33       2   my_constants
+     sub2                                      C2EC      21      33       1   my_constants
+     sub1                                      C30D      21      33       1   my_constants
+     err1                                      C32E      21      33       1   my_constants
+     err2                                      C34F      21      33       1   my_constants
+     err3                                      C370      21      33       1   my_constants
+     fertscreen                                C391      21      33       1   my_constants
+     wtrscreen                                 C3B2      21      33       1   my_constants
+     ledpat                                    C3D3       5       5       1   my_constants
+     Kseq                                      C3D8       5       5       1   my_constants
+     table                                     C3DD      10      16       1   my_constants
 - LABELS:
      __SEG_END_SSTACK                           500       0       0       1               
      CRGFLG                                      37       0       0       0   .text       
      port_t                                     240       0       0       2   .text       
 MODULE:                 -- lcddisp.c.o --
 - PROCEDURES:
-     delay_ms                                  C1D3      17      23       5   .text       
-     init_LCD                                  C1EA      52      82       1   .text       
-     display_string                            C23C      38      56       6   .text       
-     epulse                                    C274      24      36       3   .text       
-     sendCommand                               C298       F      15       7   .text       
+     delay_ms                                  C1D6      17      23       5   .text       
+     init_LCD                                  C1ED      52      82       1   .text       
+     display_string                            C23F      38      56       6   .text       
+     epulse                                    C277      24      36       3   .text       
+     sendCommand                               C29B       F      15       7   .text       
 - VARIABLES:
      data                                       500       2       2       4   .bss        
 MODULE:                 -- mc9s12e128.c.o --
@@ -668,43 +670,51 @@ MODULE:                 -- mc9s12e128.c.o --
      _PIFAD                                     27E       2       2       0   .abs_section_27e
 MODULE:                 -- fertilize.asm.o --
 - PROCEDURES:
-     fertilize                                 C3EA      19      25       1   fertilize.asm._SEC000000
-     fert                                      C403      26      38       0   fertilize.asm._SEC000000
-     wtr                                       C429      26      38       0   fertilize.asm._SEC000000
-     error                                     C44F       7       7       0   fertilize.asm._SEC000000
+     fertilize                                 C3ED      19      25       1   fertilize.asm._SEC000000
+     fert                                      C406      26      38       0   fertilize.asm._SEC000000
+     wtr                                       C42C      26      38       0   fertilize.asm._SEC000000
+     error                                     C452       7       7       0   fertilize.asm._SEC000000
 - VARIABLES:
 MODULE:                 -- newcrop.asm.o --
 - PROCEDURES:
-     newcrop                                   C456       F      15       1   newcrop.asm._SEC000000
-     klp                                       C465      13      19       2   newcrop.asm._SEC000000
-     plant                                     C478       F      15       0   newcrop.asm._SEC000000
-     pl2                                       C487      19      25       0   newcrop.asm._SEC000000
-     endplant                                  C4A0       E      14       0   newcrop.asm._SEC000000
-     space                                     C4AE      18      24       0   newcrop.asm._SEC000000
-     plow                                      C4C6       6       6       0   newcrop.asm._SEC000000
-     pl1                                       C4CC      19      25       0   newcrop.asm._SEC000000
-     endplow                                   C4E5       8       8       0   newcrop.asm._SEC000000
-     space2                                    C4ED      18      24       0   newcrop.asm._SEC000000
-     error1                                    C505       7       7       0   newcrop.asm._SEC000000
-     error2                                    C50C       9       9       0   newcrop.asm._SEC000000
+     newcrop                                   C459       F      15       1   newcrop.asm._SEC000000
+     klp                                       C468      13      19       2   newcrop.asm._SEC000000
+     plant                                     C47B       F      15       0   newcrop.asm._SEC000000
+     pl2                                       C48A      19      25       0   newcrop.asm._SEC000000
+     endplant                                  C4A3       E      14       0   newcrop.asm._SEC000000
+     space                                     C4B1      18      24       0   newcrop.asm._SEC000000
+     plow                                      C4C9       6       6       0   newcrop.asm._SEC000000
+     pl1                                       C4CF      19      25       0   newcrop.asm._SEC000000
+     endplow                                   C4E8       8       8       0   newcrop.asm._SEC000000
+     space2                                    C4F0      18      24       0   newcrop.asm._SEC000000
+     error1                                    C508       D      13       0   newcrop.asm._SEC000000
+     error2                                    C515       F      15       0   newcrop.asm._SEC000000
 - VARIABLES:
 MODULE:                 -- drawscreen.asm.o --
 - PROCEDURES:
-     drawscreen                                C515       8       8      11   drawscreen.asm._SEC000000
-     lp2                                       C51D       3       3       0   drawscreen.asm._SEC000000
-     lp1                                       C520       9       9       0   drawscreen.asm._SEC000000
+     drawscreen                                C524       8       8      11   drawscreen.asm._SEC000000
+     lp2                                       C52C       3       3       0   drawscreen.asm._SEC000000
+     lp1                                       C52F       9       9       0   drawscreen.asm._SEC000000
+- VARIABLES:
+MODULE:                 -- growth.asm.o --
+- PROCEDURES:
+     growth                                    C538      14      20       1   growth.asm._SEC000000
+     growing                                   C54C      AB     171       0   growth.asm._SEC000000
+     matured                                   C5F7      AB     171       0   growth.asm._SEC000000
+     harvest                                   C6A2       6       6       0   growth.asm._SEC000000
 - VARIABLES:
 
 *********************************************************************************************
 MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
-  main.asm.o                                  44    467    323
+  main.asm.o                                  44    470    323
   lcddisp.c.o                                  2    212      0
   mc9s12e128.c.o                             352      0      0
   fertilize.asm.o                              0    108      0
-  newcrop.asm.o                                0    191      0
+  newcrop.asm.o                                0    203      0
   drawscreen.asm.o                             0     20      0
+  growth.asm.o                                 0    368      0
   other                                      256      4      0
 
 *********************************************************************************************
@@ -1274,6 +1284,8 @@ SECTION: "newcrop.asm._SEC000000"
   newcrop klp plant pl2 endplant space plow pl1 endplow space2 error1 error2 
 SECTION: "drawscreen.asm._SEC000000"
   drawscreen lp2 lp1 
+SECTION: "growth.asm._SEC000000"
+  growth growing matured harvest 
 
 *********************************************************************************************
 OBJECT LIST SORTED BY ADDRESS
@@ -1555,15 +1567,15 @@ OBJECT LIST SORTED BY ADDRESS
      _PIEAD                                     27C       2       2       0   .abs_section_27c
      _PIFAD                                     27E       2       2       0   .abs_section_27e
      data                                       500       2       2       4   .bss        
-     disp                                       502      21      33      41   my_variable 
+     disp                                       502      21      33     107   my_variable 
      menuNum                                    523       1       1       0   my_variable 
-     gamestate                                  524       1       1       6   my_variable 
+     gamestate                                  524       1       1       9   my_variable 
      timer                                      525       2       2       4   my_variable 
      seconds                                    527       2       2       3   my_variable 
      Counter                                    529       1       1       5   my_variable 
      tON                                        52A       1       1       4   my_variable 
      rtiCtrl                                    52B       1       1       6   my_variable 
-     drawDL                                     52C       2       2       8   my_variable 
+     drawDL                                     52C       2       2      10   my_variable 
      _Startup                                  C000       0       0       0   .init       
      Entry                                     C000     108     264       0   .init       
      nextpat                                   C108       7       7       0   .init       
@@ -1583,47 +1595,51 @@ OBJECT LIST SORTED BY ADDRESS
      RTI_ISR                                   C17B       7       7       0   .init       
      timing                                    C182       9       9       0   .init       
      nocarry1                                  C18B      17      23       0   .init       
-     nocarry2                                  C1A2       3       3       0   .init       
-     endrti                                    C1A5       6       6       0   .init       
-     DCmtr                                     C1AB      1C      28       0   .init       
-     s1                                        C1C7       6       6       0   .init       
-     s2                                        C1CD       6       6       0   .init       
-     delay_ms                                  C1D3      17      23       5   .text       
-     init_LCD                                  C1EA      52      82       1   .text       
-     display_string                            C23C      38      56       6   .text       
-     epulse                                    C274      24      36       3   .text       
-     sendCommand                               C298       F      15       7   .text       
-     welcome                                   C2A7      21      33       1   my_constants
-     mainmenu                                  C2C8      21      33       2   my_constants
-     sub2                                      C2E9      21      33       1   my_constants
-     sub1                                      C30A      21      33       1   my_constants
-     err1                                      C32B      21      33       1   my_constants
-     err2                                      C34C      21      33       1   my_constants
-     err3                                      C36D      21      33       1   my_constants
-     fertscreen                                C38E      21      33       1   my_constants
-     wtrscreen                                 C3AF      21      33       1   my_constants
-     ledpat                                    C3D0       5       5       1   my_constants
-     Kseq                                      C3D5       5       5       1   my_constants
-     table                                     C3DA      10      16       1   my_constants
-     fertilize                                 C3EA      19      25       1   fertilize.asm._SEC000000
-     fert                                      C403      26      38       0   fertilize.asm._SEC000000
-     wtr                                       C429      26      38       0   fertilize.asm._SEC000000
-     error                                     C44F       7       7       0   fertilize.asm._SEC000000
-     newcrop                                   C456       F      15       1   newcrop.asm._SEC000000
-     klp                                       C465      13      19       2   newcrop.asm._SEC000000
-     plant                                     C478       F      15       0   newcrop.asm._SEC000000
-     pl2                                       C487      19      25       0   newcrop.asm._SEC000000
-     endplant                                  C4A0       E      14       0   newcrop.asm._SEC000000
-     space                                     C4AE      18      24       0   newcrop.asm._SEC000000
-     plow                                      C4C6       6       6       0   newcrop.asm._SEC000000
-     pl1                                       C4CC      19      25       0   newcrop.asm._SEC000000
-     endplow                                   C4E5       8       8       0   newcrop.asm._SEC000000
-     space2                                    C4ED      18      24       0   newcrop.asm._SEC000000
-     error1                                    C505       7       7       0   newcrop.asm._SEC000000
-     error2                                    C50C       9       9       0   newcrop.asm._SEC000000
-     drawscreen                                C515       8       8      11   drawscreen.asm._SEC000000
-     lp2                                       C51D       3       3       0   drawscreen.asm._SEC000000
-     lp1                                       C520       9       9       0   drawscreen.asm._SEC000000
+     nocarry2                                  C1A2       6       6       0   .init       
+     endrti                                    C1A8       6       6       0   .init       
+     DCmtr                                     C1AE      1C      28       0   .init       
+     s1                                        C1CA       6       6       0   .init       
+     s2                                        C1D0       6       6       0   .init       
+     delay_ms                                  C1D6      17      23       5   .text       
+     init_LCD                                  C1ED      52      82       1   .text       
+     display_string                            C23F      38      56       6   .text       
+     epulse                                    C277      24      36       3   .text       
+     sendCommand                               C29B       F      15       7   .text       
+     welcome                                   C2AA      21      33       1   my_constants
+     mainmenu                                  C2CB      21      33       2   my_constants
+     sub2                                      C2EC      21      33       1   my_constants
+     sub1                                      C30D      21      33       1   my_constants
+     err1                                      C32E      21      33       1   my_constants
+     err2                                      C34F      21      33       1   my_constants
+     err3                                      C370      21      33       1   my_constants
+     fertscreen                                C391      21      33       1   my_constants
+     wtrscreen                                 C3B2      21      33       1   my_constants
+     ledpat                                    C3D3       5       5       1   my_constants
+     Kseq                                      C3D8       5       5       1   my_constants
+     table                                     C3DD      10      16       1   my_constants
+     fertilize                                 C3ED      19      25       1   fertilize.asm._SEC000000
+     fert                                      C406      26      38       0   fertilize.asm._SEC000000
+     wtr                                       C42C      26      38       0   fertilize.asm._SEC000000
+     error                                     C452       7       7       0   fertilize.asm._SEC000000
+     newcrop                                   C459       F      15       1   newcrop.asm._SEC000000
+     klp                                       C468      13      19       2   newcrop.asm._SEC000000
+     plant                                     C47B       F      15       0   newcrop.asm._SEC000000
+     pl2                                       C48A      19      25       0   newcrop.asm._SEC000000
+     endplant                                  C4A3       E      14       0   newcrop.asm._SEC000000
+     space                                     C4B1      18      24       0   newcrop.asm._SEC000000
+     plow                                      C4C9       6       6       0   newcrop.asm._SEC000000
+     pl1                                       C4CF      19      25       0   newcrop.asm._SEC000000
+     endplow                                   C4E8       8       8       0   newcrop.asm._SEC000000
+     space2                                    C4F0      18      24       0   newcrop.asm._SEC000000
+     error1                                    C508       D      13       0   newcrop.asm._SEC000000
+     error2                                    C515       F      15       0   newcrop.asm._SEC000000
+     drawscreen                                C524       8       8      11   drawscreen.asm._SEC000000
+     lp2                                       C52C       3       3       0   drawscreen.asm._SEC000000
+     lp1                                       C52F       9       9       0   drawscreen.asm._SEC000000
+     growth                                    C538      14      20       1   growth.asm._SEC000000
+     growing                                   C54C      AB     171       0   growth.asm._SEC000000
+     matured                                   C5F7      AB     171       0   growth.asm._SEC000000
+     harvest                                   C6A2       6       6       0   growth.asm._SEC000000
 
 *********************************************************************************************
 UNUSED-OBJECTS SECTION
@@ -1656,7 +1672,7 @@ check                     USES delay
 RTI_ISR                   USES rtiCtrl 
 timing                    USES timer 
 nocarry1                  USES timer seconds 
-nocarry2                  USES seconds 
+nocarry2                  USES seconds growth 
 DCmtr                     USES Counter tON 
 init_LCD                  USES _DDRAD _PTAD _DDRM delay_ms _PTM data 
                                 sendCommand epulse 
@@ -1677,9 +1693,12 @@ plow                      USES disp
 pl1                       USES disp drawscreen 
 endplow                   USES gamestate klp 
 space2                    USES disp drawscreen 
-error1                    USES err2 drawscreen 
-error2                    USES err3 drawscreen klp 
+error1                    USES err2 drawDL drawscreen 
+error2                    USES err3 drawDL drawscreen klp 
 drawscreen                USES display_string drawDL 
+growing                   USES disp gamestate 
+matured                   USES disp gamestate 
+harvest                   USES gamestate 
 
 *********************************************************************************************
 DEPENDENCY TREE
@@ -1693,5 +1712,5 @@ STATISTIC SECTION
 ExeFile:
 --------
 Number of blocks to be downloaded: 6
-Total size of all blocks to be downloaded: 1325
+Total size of all blocks to be downloaded: 1708
 
