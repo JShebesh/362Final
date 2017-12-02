@@ -4,7 +4,7 @@
 newcrop:
     ldab gamestate
     cmpb #2
-    beq error1
+    lbeq error1
     movw #25,drawDL  
 klp:
     ldd #sub2
@@ -20,21 +20,41 @@ klp:
 plant:
 	 ldaa gamestate
 	 cmpa #$01
-	 bne error2
+	 lbne error2
      ldy #32
      ldx #disp
      
+ 
 pl2:
      ldaa #46
      staa 1,X+
      ldd #disp
      jsr drawscreen
      dey
-     bne pl2
+     beq endplant
+     cpy #9
+     beq space
+     cpy #25
+     beq space
+     bra pl2
+endplant: 
      movb #$02,gamestate
      cli
      movw #100,drawDL
      rts
+     
+space:
+     ldaa #32
+     staa 1,x+
+     ldd #disp
+     jsr drawscreen
+     dey
+     ldaa #32
+     staa 1,x+
+     ldd #disp
+     jsr drawscreen
+     dey
+     bra pl2
     
     
     
@@ -48,9 +68,27 @@ pl1:
      ldd #disp
      jsr drawscreen
      dey
-     bne pl1
+     beq endplow
+     cpy #9
+     beq space2
+     cpy #25
+     beq space2
+     bra pl1
+endplow:
      movb #$01,gamestate
-     bra klp
+     jmp klp
+space2:
+     ldaa #32
+     staa 1,x+
+     ldd #disp
+     jsr drawscreen
+     dey
+     ldaa #32
+     staa 1,x+
+     ldd #disp
+     jsr drawscreen
+     dey
+     bra pl1
     
 error1:
     ldd #err2
@@ -59,5 +97,5 @@ error1:
 error2:
 	ldd #err3
 	jsr drawscreen
-	bra klp
+	jmp klp
 	
