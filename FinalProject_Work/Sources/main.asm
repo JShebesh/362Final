@@ -10,12 +10,12 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Entry,timer,drawDL,rtiCtrl,port_t,RTI_ISR,CRGFLG,tON,fertscreen, wtrscreen, _Startup, err3, gamestate,Keyboard,err1,err2,sub2,sub1,disp,port_t
+            XDEF Entry,menuNum,start,port_p,sub1,sub2,mainmenu,harv,harvesting,tth,tth2,timer,seconds,STPcnt,PlantLED,wtrDC,fertDC,drawDL,rtiCtrl,port_t,RTI_ISR,CRGFLG,tON,fertscreen, wtrscreen, _Startup,port_s, err3,PlowLED, gamestate,Keyboard,err1,err2,sub2,sub1,disp,port_t
             ; we use export 'Entry' as symbol. This allows us to
             ; reference 'Entry' either in the linker .prm file
             ; or from C/C++ later on
 
-            XREF __SEG_END_SSTACK,display_string,pot_value,read_pot,init_LCD,SendsChr,PlayTone,fertilize,newcrop,drawscreen      ; symbol defined by the linker for the end of the stack
+            XREF __SEG_END_SSTACK,growth,harvesting,pushb,display_string,pot_value,read_pot,init_LCD,SendsChr,PlayTone,fertilize,newcrop,drawscreen      ; symbol defined by the linker for the end of the stack
             
             ; LCD References
 	         
@@ -36,17 +36,27 @@ Counter ds.b 1
 tON ds.b 1
 rtiCtrl ds.b 1
 drawDL ds.w 1
+fertDC ds.b 1
+wtrDC ds.b 1
+STPcnt ds.b 1
 my_constants: SECTION
+harv dc.b       "   Harvesting                   ",0
 welcome dc.b    "    Welcome         Farmtek     ",0
 mainmenu  dc.b  "(A)Fertilize    (B)New Crop     ",0
 sub2 dc.b       "(A)Plow         (B)Plant        ",0
 sub1 dc.b       "(A)Fertilize    (B)Water        ",0
 err1 dc.b       "Plant Crop      to Continue     ",0
 err2 dc.b       "Crop Already    Planted         ",0
-err3 dc.b 		"Field not       Plowed          ",0
+err3 dc.b 		  "Field not       Plowed          ",0
 fertscreen dc.b "Fertilizing                     ",0
 wtrscreen dc.b  "Watering                        ",0
+tth       dc.b  "Time to         Harvest         ",0
+tth2      dc.b  "Press Button    To Harvest      ",0
 ledpat dc.b $24,$81,$18,$FF,$00
+PlantLED dc.b $80,$40,$20,$10,$08,$04,$02,$01,$80,$40,$20,$10,$08,$04,$02,$01,$80,$40,$20,$10,$08,$04,$02,$01,$80,$40,$20,$10,$08,$04,$02,$01
+PlowLED dc.b $7F,$BF,$DF,$EF,$F7,$FB,$FD,$FE,$7F,$BF,$DF,$EF,$F7,$FB,$FD,$FE,$7F,$BF,$DF,$EF,$F7,$FB,$FD,$FE,$7F,$BF,$DF,$EF,$F7,$FB,$FD,$FE
+fertLED dc.b $A5,$00
+wtrLED dc.b  $AA,$55
 port_s equ $248
 s_DDR equ  $24A
 port_u equ $268
@@ -57,13 +67,21 @@ port_t equ $240
 t_DDR equ $242
 Kseq dc.b $70,$B0,$D0,$E0,$FF
 table dc.b $eb,$77,$7b,$7d,$b7,$bb,$bd,$d7,$db,$dd,$e7,$ed,$7e,$be,$de,$ee
+port_p equ $258
+p_DDR equ $25A
+seq dc.b %00001010,%00010010,%00010100,%00001100
  
 
 ; code section
 MyCode:     SECTION
 Entry:
 _Startup:
-           movw #100,drawDL
+           cli
+           movb #$00,STPcnt
+           MOVB #%00011110,p_DDR
+           movb #06,fertDC
+           movb #30,wtrDC
+           movw #1000,drawDL
            movb #%00000000,rtiCtrl
            movb #' ',disp
            movb #' ',disp+1
@@ -138,6 +156,7 @@ setup:
 
 
 start:
+     movb #00,menuNum
      jsr Keyboard
      cmpa #10
      bne b1
@@ -147,14 +166,14 @@ start:
      bne nxt
      jsr newcrop
 nxt:
-     staa port_s
      ldd #mainmenu
      jsr display_string
      bra start	
 
 Keyboard:
 rst:    ldx #Kseq
-scan:    
+scan:
+    brclr port_p,#%00100000,PB    
     ldaa 1,X+
     cmpa #$FF
     beq rst
@@ -167,7 +186,9 @@ scan:
     beq scan
     jsr Search
 end:rts        
-
+PB:
+    jsr pushb
+    bra scan
 Search:
 		ldx #table;loads address of first value of table
 		ldaa #0
@@ -198,9 +219,21 @@ loop: dey
 
 RTI_ISR:
         ldaa rtiCtrl
-        cmpa #1
-        beq DCmtr
+        bita #%00011100
+        beq DCtst
+        jsr STPmtr
+DCtst:
+        bita #%00000001
+        beq timing
+        jsr DCmtr
 timing:
+        ldaa rtiCtrl
+        bita #%00000010
+        bne drawscreenDL
+postDelay:
+        ldaa gamestate
+        cmpa #2
+        blt endrti
         ldd timer
         clc
         incb
@@ -208,7 +241,7 @@ timing:
         inca
 nocarry1:
         std timer        
-        cpd #$03E8
+        cpd #$03E9
         bne  endrti
         movw #$0000,timer
         ldd seconds
@@ -218,14 +251,19 @@ nocarry1:
         inca
 nocarry2: 
         std seconds
+        jsr growth
 endrti:
         movb #$80,CRGFLG
         RTI
 
-
-
+drawscreenDL:
+        ldx drawDL
+        dex
+        stx drawDL
+        bra postDelay
 
 DCmtr:
+        jsr dcLED
         ldaa Counter
         inca
         staa Counter
@@ -236,11 +274,132 @@ DCmtr:
         ldaa #$00
         staa Counter
         movb #$80,CRGFLG
-        bra timing
+        rts
         s1:
            bset port_t,#%00001000
-           bra timing
+           rts
         s2:
            bclr port_t,#%00001000
-           bra timing
+           rts
+STPmtr:
+       ldaa rtiCtrl
+       bita #%00001000
+       bne seeder
+       bita #%00010000
+       bne harvester
+       bra chisel
+       
+       
+       
+       
+harvester:
+       ldab Counter
+       incb
+       stab Counter
+       cmpb #30
+       bne endSTP
+       movb #00,Counter
+       ldab STPcnt
+       ldx #seq
+       abx
+       ldaa 0,X
+       staa port_p
+       decb
+       bmi rstcnt1
+       stab STPcnt
+       rts
+rstcnt1:
+       movb #03,STPcnt
+       rts
+       
+seeder:
+       ldab Counter
+       incb
+       stab Counter
+       cmpb #30
+       bne endSTP
+       movb #00,Counter
+       ldab STPcnt
+       ldx #seq
+       abx
+       ldaa 0,X
+       staa port_p
+       incb
+       cmpb #04
+       beq rstcnt2
+       stab STPcnt
+       rts
+rstcnt2:
+       movb #00,STPcnt
+       rts
 
+chisel:
+       ldab Counter
+       incb
+       stab Counter
+       cmpb #10
+       bne endSTP
+       movb #00,Counter
+       ldab STPcnt
+       ldx #seq
+       abx
+       ldaa 0,X
+       staa port_p
+       decb
+       bmi rstcnt3
+       stab STPcnt
+       rts
+rstcnt3:
+       movb #03,STPcnt
+       rts
+
+endSTP:
+       rts
+
+
+dcLED:
+      ldd timer
+      ldx #100
+      idiv
+      cpd #00
+      beq Pattern
+      rts
+Pattern:
+      ldaa rtiCtrl
+      bita #%10000000
+      bne fert0
+      
+;water LEDS 
+      xgdx
+      ldx #2
+      idiv
+      cpd #00
+      bne wtr1
+      ldx #wtrLED
+      ldaa 0,X
+      staa port_s
+      rts
+wtr1:
+      ldx #wtrLED
+      ldaa 1,X
+      staa port_s
+      rts
+
+
+fert0:
+      xgdx
+      ldx #2
+      idiv
+      cpd #00
+      bne fert1
+      ldx #fertLED
+      ldaa 0,X
+      staa port_s
+      rts
+fert1:
+      ldx #fertLED
+      ldaa 1,X
+      staa port_s
+      rts      
+      
+      

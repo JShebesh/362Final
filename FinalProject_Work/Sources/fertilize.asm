@@ -1,10 +1,11 @@
     XDEF fertilize
-    XREF gamestate,drawDL,rtiCtrl,port_t,tON,fertscreen,wtrscreen,display_string,Keyboard,err1,sub1,drawscreen
+    XREF gamestate,fertDC,menuNum,wtrDC,drawDL,rtiCtrl,port_t,tON,fertscreen,wtrscreen,display_string,Keyboard,err1,sub1,drawscreen
 		
 fertilize:
+    movb #01,menuNum
     ldab gamestate
     cmpb #$02
-    bne error
+    blt error
     ldd #sub1
     jsr display_string
 fl1:
@@ -18,25 +19,27 @@ fl1:
 
 
 fert:
+	  ldaa fertDC
+	  staa tON
+	  ;movb #08,tON
+	  bset rtiCtrl,#%10000001
+	  movw #2000,drawDL
 	  ldd #fertscreen
-	  movb #08,tON
-	  movb #01,rtiCtrl
-	  movw #200,drawDL
     jsr drawscreen
     bclr port_t,#%00001000
-    movb #00,rtiCtrl
-    movw #100,drawDL
+    bclr rtiCtrl,#%10000001
     rts
 
 wtr:
-   	ldd #wtrscreen
-   	movb #32,tON
-   	movb #01,rtiCtrl
-   	movw #200,drawDL
+    ldaa wtrDC
+    staa tON
+   	;movb #32,tON
+   	bset rtiCtrl,#%00000001
+   	movw #2000,drawDL
+    ldd #wtrscreen
    	jsr drawscreen
-   	movw #00,rtiCtrl
+    bclr rtiCtrl,#%10000001
    	bclr port_t,#%00001000
-   	movb #100,drawDL
     rts
     
 error:
