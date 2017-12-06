@@ -1,0 +1,74 @@
+A3:	equ	37
+B3:	equ	33
+C3:	equ	63
+d3:	equ	56
+E3:	equ	50
+F3:	equ	47
+G3:	equ	42
+C4:	equ	31
+D4:	equ	28
+E4:	equ	25
+F4:	equ	24
+G4:	equ	21
+A4:	equ	19
+A5:	equ	9
+B5:	equ	8
+B4:	equ	17
+C5:	equ	16
+D5:	equ	14
+E5:	equ	12
+F5:	equ	11
+G5:	equ	10
+A3F:	equ	40
+B4F:	equ	35
+D3F:	equ	59
+E3F:	equ	53
+G3F:	equ	44
+A4F:	equ	20
+B4F:	equ	17
+D4F:	equ	30
+E4F:	equ	26
+G4F:	equ	22
+A5F:	equ	10
+B5F:	equ	9
+D5F:	equ	15
+E5F:	equ	13
+G5F:	equ	11
+
+Arr	dc.b 	E5,E5,255,E5,E5,255,255,E5,E5,255,255,C5,C5,E5,E5,255,255
+	dc.b	G5,G5,255,255,255,255,255,255,G4,G4,255,255,255,255,255,255
+	dc.b	C5,C5,255,255,255,255,G4,G4,255,255,255,255,E4,E4,255,255
+	dc.b	255,255,A4,A4,255,255,B4,B4,255,255,Bb4,Bb4,A4,A4,00
+		
+WelcomeNotes:		;have a flag go to notes
+	ldab	#00
+	ldx	#Arr
+Playnotes:	
+	ldaa	b,x	;b has value of sound
+	cmpa	#255	;any rest value
+	beq	Rest
+	cmpa	#00	;end of array
+	beq	Leave
+	pusha
+	pushb
+	pshx
+	pshy
+	jsr	SendsChr	;send character
+	jsr	Playtone	;send tone to speaker
+	puly
+	pulx
+	pulb
+	pula
+	incb		;increment the array counter
+	bra	Playnotes
+Leave:	
+	rts
+	;change flag to normal
+	
+Rest:
+	pshy
+	ldy	#128	;.128ms delay
+	dbne	y,Rest	;delay until rest is over
+	puly
+	incb		;increment array counter
+	bra Playnotes	;go to next not
