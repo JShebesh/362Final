@@ -10,12 +10,12 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Entry,menuNum,start,port_p,sub1,sub2,mainmenu,harv,harvesting,tth,tth2,timer,seconds,STPcnt,PlantLED,wtrDC,fertDC,drawDL,rtiCtrl,port_t,RTI_ISR,CRGFLG,tON,fertscreen, wtrscreen, _Startup,port_s, err3,PlowLED, gamestate,Keyboard,err1,err2,sub2,sub1,disp,port_t
+            XDEF Entry,menuNum,exitflg,wtrctrldisp,fertctrldisp,SWstatus,start,port_p,sub1,sub2,mainmenu,harv,harvesting,tth,tth2,timer,seconds,STPcnt,PlantLED,wtrDC,fertDC,drawDL,rtiCtrl,port_t,RTI_ISR,CRGFLG,tON,fertscreen, wtrscreen, _Startup,port_s, err3,PlowLED, gamestate,Keyboard,err1,err2,sub2,sub1,disp,port_t
             ; we use export 'Entry' as symbol. This allows us to
             ; reference 'Entry' either in the linker .prm file
             ; or from C/C++ later on
 
-            XREF __SEG_END_SSTACK,growth,harvesting,pushb,display_string,pot_value,read_pot,init_LCD,SendsChr,PlayTone,fertilize,newcrop,drawscreen      ; symbol defined by the linker for the end of the stack
+            XREF __SEG_END_SSTACK,growth,flowctrl,harvesting,pushb,display_string,pot_value,read_pot,init_LCD,SendsChr,PlayTone,fertilize,newcrop,drawscreen      ; symbol defined by the linker for the end of the stack
             
             ; LCD References
 	         
@@ -39,7 +39,11 @@ drawDL ds.w 1
 fertDC ds.b 1
 wtrDC ds.b 1
 STPcnt ds.b 1
-my_constants: SECTION
+SWstatus ds.b 1
+wtrctrldisp ds.b 33
+fertctrldisp ds.b 33
+exitflg ds.b 1
+my_constants: SECTION 
 harv dc.b       "   Harvesting                   ",0
 welcome dc.b    "    Welcome         Farmtek     ",0
 mainmenu  dc.b  "(A)Fertilize    (B)New Crop     ",0
@@ -76,10 +80,76 @@ seq dc.b %00001010,%00010010,%00010100,%00001100
 MyCode:     SECTION
 Entry:
 _Startup:
+		   movb #'(',fertctrldisp
+           movb #'A',fertctrldisp+1
+           movb #')',fertctrldisp+2
+           movb #'I',fertctrldisp+3
+           movb #'n',fertctrldisp+4
+           movb #'c',fertctrldisp+5
+           movb #'F',fertctrldisp+6
+           movb #'e',fertctrldisp+7
+           movb #'r',fertctrldisp+8
+           movb #'t',fertctrldisp+9
+           movb #'i',fertctrldisp+10
+           movb #'l',fertctrldisp+11
+           movb #'i',fertctrldisp+12
+           movb #'z',fertctrldisp+13
+           movb #'e',fertctrldisp+14
+           movb #'r',fertctrldisp+15
+           movb #'(',fertctrldisp+16
+           movb #'B',fertctrldisp+17
+           movb #')',fertctrldisp+18
+           movb #'D',fertctrldisp+19
+           movb #'e',fertctrldisp+20
+           movb #'c',fertctrldisp+21
+           movb #' ',fertctrldisp+22
+           movb #' ',fertctrldisp+23
+           movb #' ',fertctrldisp+24
+           movb #' ',fertctrldisp+25
+           movb #' ',fertctrldisp+26
+           movb #' ',fertctrldisp+27
+           movb #' ',fertctrldisp+28
+           movb #'1',fertctrldisp+29
+           movb #'0',fertctrldisp+30
+           movb #'%',fertctrldisp+31
+           movb #0,fertctrldisp+32    ;string terminator, acts like '\0'
+		   movb #'(',wtrctrldisp
+           movb #'A',wtrctrldisp+1
+           movb #')',wtrctrldisp+2
+           movb #'I',wtrctrldisp+3
+           movb #'n',wtrctrldisp+4
+           movb #'c',wtrctrldisp+5
+           movb #' ',wtrctrldisp+6
+           movb #' ',wtrctrldisp+7
+           movb #' ',wtrctrldisp+8
+           movb #' ',wtrctrldisp+9
+           movb #'W',wtrctrldisp+10
+           movb #'a',wtrctrldisp+11
+           movb #'t',wtrctrldisp+12
+           movb #'e',wtrctrldisp+13
+           movb #'r',wtrctrldisp+14
+           movb #' ',wtrctrldisp+15
+           movb #'(',wtrctrldisp+16
+           movb #'B',wtrctrldisp+17
+           movb #')',wtrctrldisp+18
+           movb #'D',wtrctrldisp+19
+           movb #'e',wtrctrldisp+20
+           movb #'c',wtrctrldisp+21
+           movb #' ',wtrctrldisp+22
+           movb #' ',wtrctrldisp+23
+           movb #' ',wtrctrldisp+24
+           movb #' ',wtrctrldisp+25
+           movb #' ',wtrctrldisp+26
+           movb #' ',wtrctrldisp+27
+           movb #' ',wtrctrldisp+28
+           movb #'5',wtrctrldisp+29
+           movb #'0',wtrctrldisp+30
+           movb #'%',wtrctrldisp+31
+           movb #0,wtrctrldisp+32    ;string terminator, acts like '\0'
            cli
            movb #$00,STPcnt
            MOVB #%00011110,p_DDR
-           movb #06,fertDC
+           movb #6,fertDC
            movb #30,wtrDC
            movw #1000,drawDL
            movb #%00000000,rtiCtrl
@@ -120,6 +190,7 @@ _Startup:
            movw #0000,timer
            movw #0000,seconds
            movb #5,tON
+           movb #1,SWstatus
     movb #$00,Counter
     movb #$80,CRGINT
     movb #$40,RTICTL
@@ -129,6 +200,7 @@ _Startup:
     movb #$F0,$26D
     movb #$0F,$26C
     movb #$FF,s_DDR
+    movb #00,exitflg
     bclr port_s,#%11111111
  	LDS #__SEG_END_SSTACK
  	jsr init_LCD
@@ -172,8 +244,13 @@ nxt:
 
 Keyboard:
 rst:    ldx #Kseq
+		brset port_t,#%00000001,SW
+		brset port_t,#%00000010,SW
 scan:
-    brclr port_p,#%00100000,PB    
+    brclr port_p,#%00100000,PB
+    ldaa exitflg
+    bne swcheck    
+scanSW:
     ldaa 1,X+
     cmpa #$FF
     beq rst
@@ -189,6 +266,19 @@ end:rts
 PB:
     jsr pushb
     bra scan
+SW:
+	ldaa SWstatus
+	beq scan
+	jsr flowctrl
+	bra scan
+
+swcheck:
+	ldaa port_t
+	anda #%00000011
+	beq exitSW
+	bra scanSW
+exitSW:
+	rts			 
 Search:
 		ldx #table;loads address of first value of table
 		ldaa #0
@@ -255,7 +345,7 @@ nocarry2:
 endrti:
         movb #$80,CRGFLG
         RTI
-
+	
 drawscreenDL:
         ldx drawDL
         dex
