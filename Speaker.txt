@@ -39,36 +39,40 @@ Arr	dc.b 	E5,E5,255,E5,E5,255,255,E5,E5,255,255,C5,C5,E5,E5,255,255
 	dc.b	G5,G5,255,255,255,255,255,255,G4,G4,255,255,255,255,255,255
 	dc.b	C5,C5,255,255,255,255,G4,G4,255,255,255,255,E4,E4,255,255
 	dc.b	255,255,A4,A4,255,255,B4,B4,255,255,Bb4,Bb4,A4,A4,00
-		
-WelcomeNotes:		;have a flag go to notes
-	ldab	#00
-	ldx	#Arr
-Playnotes:	
-	ldaa	b,x	;b has value of sound
+	
+	;in main
+	ldx	#Arr	;store location of array
+	stx	loc	;use the location so shift through array
+
+Playnotes:		;have flag go to play
+	ldx	loc
+	ldaa	0,x	;b has value of sound
 	cmpa	#255	;any rest value
 	beq	Rest
 	cmpa	#00	;end of array
 	beq	Leave
 	pusha
-	pushb
-	pshx
-	pshy
 	jsr	SendsChr	;send character
-	jsr	Playtone	;send tone to speaker
-	puly
-	pulx
-	pulb
 	pula
-	incb		;increment the array counter
-	bra	Playnotes
+	jsr	Note
+	jsr	Playtone	;send tone to speaker
+	inx		;increment the array counter
+	stx	loc	;store next location
 Leave:	
 	rts
 	;change flag to normal
 	
-Rest:
+	
+Note:
 	pshy
-	ldy	#128	;.128ms delay
-	dbne	y,Rest	;delay until rest is over
+	ldy	#75000	;75 ms delay
+	dbne	y,Reset	;delay until rest is over
 	puly
-	incb		;increment array counter
-	bra Playnotes	;go to next not
+	rts
+Rest:
+	ldy	#75000	;75 ms delay
+	dbne	y,Reset	;delay until rest is over
+	puly
+	incx		;increment array counter
+	stx	loc	;store next location
+	bra Leave
