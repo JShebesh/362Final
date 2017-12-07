@@ -1,18 +1,30 @@
     XDEF growth
-    XREF seconds,disp,gamestate
+    XREF seconds,wtrctrldisp,fertctrldisp,disp,gamestate,cropstats,fertDC,wtrDC
     
 growth:
+           ldd cropstats
+           brclr cropstats,#%00000001,endgrow
+           brclr cropstats,#%00000010,endgrow
+           brclr cropstats,#%00000011,endgrow
+           ldd seconds
            cpd #10
-           beq growing
-           cpd #20
+           ble endgrow
+           ldaa cropstats
+           cmpa #7
+           lbeq growing
+           cmpa #15
            lbeq matured
-           cpd #30
+           cmpa #31
            lbeq harvest
+endgrow:
            RTS
            
 
 
 growing:
+           movb #00,seconds
+           bclr cropstats,#%00000011
+           bset cropstats,#%00001000
            movb #'*',disp
            movb #'*',disp+1
            movb #'*',disp+2
@@ -47,8 +59,20 @@ growing:
            movb #'*',disp+31
            movb #0,disp+32
            movb #3,gamestate
+           movb #'1',fertctrldisp+29
+           movb #'0',fertctrldisp+30
+           movb #'%',fertctrldisp+31
+           movb #' ',wtrctrldisp+28
+           movb #'5',wtrctrldisp+29
+           movb #'0',wtrctrldisp+30
+           movb #'%',wtrctrldisp+31
+           movb #30,wtrDC
+           movb #6,fertDC
            rts
 matured:
+           movb #00,seconds
+           bclr cropstats,#%00000011
+           bset cropstats,#%00010000
            movb #'@',disp
            movb #'@',disp+1
            movb #'@',disp+2
@@ -83,7 +107,26 @@ matured:
            movb #'@',disp+31
            movb #0,disp+32
            movb #4,gamestate
+           movb #30,wtrDC
+           movb #6,fertDC
+           movb #'1',fertctrldisp+29
+           movb #'0',fertctrldisp+30
+           movb #'%',fertctrldisp+31
+           movb #' ',wtrctrldisp+28
+           movb #'5',wtrctrldisp+29
+           movb #'0',wtrctrldisp+30
+           movb #'%',wtrctrldisp+31
            rts
-harvest:  
+harvest:   
+           movb #30,wtrDC
+           movb #6,fertDC
+           movb #'1',fertctrldisp+29
+           movb #'0',fertctrldisp+30
+           movb #'%',fertctrldisp+31
+           movb #' ',wtrctrldisp+28
+           movb #'5',wtrctrldisp+29
+           movb #'0',wtrctrldisp+30
+           movb #'%',wtrctrldisp+31
+           movb #0,cropstats
            movb #5,gamestate
            rts

@@ -1,5 +1,5 @@
     XDEF newcrop
-    XREF gamestate,menuNum,rtiCtrl,STPcnt,PlantLED,PlowLED,drawDL,port_s,display_string,Keyboard,err2,err3,sub2,drawscreen,disp,__SEG_END_SSTACK
+    XREF gamestate,cropstats,menuNum,rtiCtrl,STPcnt,PlantLED,PlowLED,drawDL,port_s,display_string,Keyboard,err2,err3,sub2,drawscreen,disp,__SEG_END_SSTACK
 		
 newcrop:
     movb #02,menuNum
@@ -28,6 +28,7 @@ plant:
    ldx #disp
    movb #00,STPcnt
    bset rtiCtrl,#%00001000
+   bset cropstats,#%00000100
    psha
      
 pl2:

@@ -1,10 +1,17 @@
 	XDEF flowctrl
-	XREF port_t,drawDL,exitflg,drawscreen,Keyboard,SWstatus,fertDC,wtrDC,menuNum,sub1,sub2,mainmenu,display_string,wtrctrldisp,fertctrldisp,
+	XREF port_t,ferterr,lastscreen,err1,gamestate,wtrerr,wtrdisp,fertdisp,drawDL,cropstats,exitflg,drawscreen,Keyboard,SWstatus,fertDC,wtrDC,menuNum,sub1,sub2,mainmenu,display_string,wtrctrldisp,fertctrldisp,
 	 
 	
 flowctrl:
 	movb #$00,SWstatus
 	movb #$01,exitflg
+	ldaa gamestate
+	cmpa #02
+	bge contflw
+	ldd #err1
+	jsr drawscreen
+	lbra endflow
+contflw:
 	ldaa port_t
 	anda #%00000011
 	cmpa #$01
@@ -15,8 +22,19 @@ flowctrl:
 	
 	
 wtrctrl:
+    ldaa cropstats
+    anda #%00000010
+    beq notwatered
+    ldd #wtrerr
+    jsr drawscreen
+    lbra endflow
+notwatered:
+    ldd #wtrdisp
+    jsr drawscreen
+wtrlp:
 	ldd #wtrctrldisp
 	movw #250,drawDL
+	std lastscreen
 	jsr drawscreen
 	ldaa port_t
     cmpa #%00000001
@@ -28,7 +46,7 @@ wtrctrl:
 	beq decrease
 	ldaa port_t
 	;brclr port_t,#%00000011,endflow
-	bra wtrctrl
+	bra wtrlp
 	
 increase:
 	clra
@@ -40,7 +58,7 @@ increase:
     movb #'M',wtrctrldisp+29
     movb #'A',wtrctrldisp+30
     movb #'X',wtrctrldisp+31
-    bra wtrctrl    
+    bra wtrlp    
 inc:
 	addb #6
 	stab wtrDC
@@ -57,13 +75,13 @@ inc:
 	stab wtrctrldisp+29
 	movb #'0',wtrctrldisp+30
 	movb #'%',wtrctrldisp+31
-	bra wtrctrl
+	lbra wtrlp
 maxi:
 	movb #'1',wtrctrldisp+28
 	movb #'0',wtrctrldisp+29
 	movb #'0',wtrctrldisp+30	
 	movb #'%',wtrctrldisp+31
-	lbra wtrctrl
+	lbra wtrlp
 	
 
 decrease:
@@ -75,7 +93,7 @@ decrease:
     movb #'M',wtrctrldisp+29
     movb #'I',wtrctrldisp+30
     movb #'N',wtrctrldisp+31
-    lbra wtrctrl    
+    lbra wtrlp    
 dec:
 	subb #6
 	stab wtrDC
@@ -89,11 +107,22 @@ dec:
 	stab wtrctrldisp+29
 	movb #'0',wtrctrldisp+30
 	movb #'%',wtrctrldisp+31
-	lbra wtrctrl
+	lbra wtrlp
 	
 
 fertctrl:
+    ldaa cropstats
+    anda #%00000001
+    beq notfert
+    ldd #ferterr
+    jsr drawscreen
+    lbra endflow
+notfert:
+    ldd #fertdisp
+    jsr drawscreen
+fertlp:
 	ldd #fertctrldisp
+	std lastscreen
 	movw #250,drawDL
 	jsr drawscreen
 	ldaa port_t
@@ -106,7 +135,7 @@ fertctrl:
 	beq decrease1
 	ldaa port_t
 	;brclr port_t,#%00000011,endflow
-	bra fertctrl
+	bra fertlp
 
 increase1:
 	clra
@@ -117,7 +146,7 @@ increase1:
     movb #'M',fertctrldisp+29
     movb #'A',fertctrldisp+30
     movb #'X',fertctrldisp+31
-    bra fertctrl    
+    bra fertlp    
 inc1:
 	addb #6
 	stab fertDC
@@ -130,7 +159,7 @@ inc1:
 	stab fertctrldisp+29
 	movb #'0',fertctrldisp+30
 	movb #'%',fertctrldisp+31
-	bra fertctrl
+	bra fertlp
 	
 	
 
@@ -143,7 +172,7 @@ decrease1:
     movb #'M',wtrctrldisp+29
     movb #'I',wtrctrldisp+30
     movb #'N',wtrctrldisp+31
-    bra fertctrl    
+    lbra fertlp    
 dec1:
 	subb #6
 	stab fertDC
@@ -156,7 +185,7 @@ dec1:
 	stab fertctrldisp+29
 	movb #'0',fertctrldisp+30
 	movb #'%',fertctrldisp+31
-	lbra fertctrl
+	lbra fertlp
 	
 
 endflow:

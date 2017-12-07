@@ -1,5 +1,5 @@
     xdef    pushb
-    xref    gamestate,mainmenu,port_p,start,harvesting,sub1,sub2,menuNum,disp,drawscreen,tth,display_string,tth2,Keyboard
+    xref    gamestate,lastscreen,port_t,mainmenu,port_p,start,harvesting,sub1,sub2,menuNum,disp,drawscreen,tth,display_string,tth2,Keyboard
 
 
 pushb: 
@@ -10,6 +10,8 @@ pushb:
     beq fin 
     ldd #disp ;gamestate1-4
     jsr drawscreen
+    brset port_t,#%00000001,lastsscreen
+    brset port_t,#%00000010,lastsscreen
     ldaa menuNum
     beq mainMenu
     cmpa #2
@@ -28,7 +30,11 @@ fertMenu:
     jsr drawscreen
     puld
     rts
-
+lastsscreen:
+    ldd lastscreen
+    jsr drawscreen
+    puld
+    rts
     
 fin:    ;gamestate5
     ldd #tth

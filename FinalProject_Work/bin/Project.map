@@ -1,5 +1,5 @@
 *** EVALUATION ***
-PROGRAM "C:\Users\justedwa\Desktop\362Final-test1\FinalProject_Work\bin\Project.abs"
+PROGRAM "C:\Users\justedwa\Desktop\362Final-master\FinalProject_Work\bin\Project.abs"
 
 *********************************************************************************************
 TARGET SECTION
@@ -32,8 +32,8 @@ Entry point: 0xC000 (_Startup)
 SECTION-ALLOCATION SECTION
 Section Name                    Size  Type     From       To       Segment
 ---------------------------------------------------------------------------------------------
-.init                           1135     R     0xC000     0xC46E   ROM_C000
-.text                            212     R     0xC46F     0xC542   ROM_C000
+.init                           1388     R     0xC000     0xC56B   ROM_C000
+.text                            212     R     0xC56C     0xC63F   ROM_C000
 .stack                           256   R/W      0x400      0x4FF   RAM
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg0
 .abs_section_9                     1   N/I        0x9        0x9   .absSeg1
@@ -309,28 +309,28 @@ Section Name                    Size  Type     From       To       Segment
 .abs_section_27c                   2   N/I      0x27C      0x27D   .absSeg271
 .abs_section_27e                   2   N/I      0x27E      0x27F   .absSeg272
 .bss                               2   R/W      0x500      0x501   RAM
-my_constants                     494     R     0xC543     0xC730   ROM_C000
-my_variable                      115   R/W      0x502      0x574   RAM
-fertilize.asm._SEC000000          99     R     0xC731     0xC793   ROM_C000
-newcrop.asm._SEC000000           320     R     0xC794     0xC8D3   ROM_C000
-drawscreen.asm._SEC000000         27     R     0xC8D4     0xC8EE   ROM_C000
-growth.asm._SEC000000            368     R     0xC8EF     0xCA5E   ROM_C000
-pushb.asm._SEC000000              79     R     0xCA5F     0xCAAD   ROM_C000
-harvesting.asm._SEC000000         62     R     0xCAAE     0xCAEB   ROM_C000
-flowctrl.asm._SEC000000          433     R     0xCAEC     0xCC9C   ROM_C000
+my_constants                     659     R     0xC640     0xC8D2   ROM_C000
+my_variable                      154   R/W      0x502      0x59B   RAM
+fertilize.asm._SEC000000         117     R     0xC8D3     0xC947   ROM_C000
+newcrop.asm._SEC000000           324     R     0xC948     0xCA8B   ROM_C000
+drawscreen.asm._SEC000000         27     R     0xCA8C     0xCAA6   ROM_C000
+growth.asm._SEC000000            562     R     0xCAA7     0xCCD8   ROM_C000
+pushb.asm._SEC000000              97     R     0xCCD9     0xCD39   ROM_C000
+harvesting.asm._SEC000000         97     R     0xCD3A     0xCD9A   ROM_C000
+flowctrl.asm._SEC000000          506     R     0xCD9B     0xCF94   ROM_C000
 .vectSeg273_vect                   2     R     0xFFF0     0xFFF1   .vectSeg273
 .vectSeg274_vect                   2     R     0xFFFE     0xFFFF   .vectSeg274
 
 Summary of section sizes per section type:
-READ_ONLY (R):         CA1 (dec:     3233)
-READ_WRITE (R/W):      175 (dec:      373)
+READ_ONLY (R):         F99 (dec:     3993)
+READ_WRITE (R/W):      19C (dec:      412)
 NO_INIT (N/I):         160 (dec:      352)
 
 *********************************************************************************************
 VECTOR-ALLOCATION SECTION
     Address     InitValue   InitFunction
 ---------------------------------------------------------------------------------------------
-     0xFFF0        0xC314   RTI_ISR
+     0xFFF0        0xC3DD   RTI_ISR
      0xFFFE        0xC000   _Startup
 
 *********************************************************************************************
@@ -339,101 +339,118 @@ OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 MODULE:                 -- main.asm.o --
 - PROCEDURES:
-     Entry                                     C000     272     626       0   .init       
+     Entry                                     C000     320     800       0   .init       
      _Startup                                  C000       0       0       0   .init       
-     nextpat                                   C272       7       7       0   .init       
-     setup                                     C279       F      15       0   .init       
-     start                                     C288       F      15       1   .init       
-     b1                                        C297       7       7       0   .init       
-     nxt                                       C29E       8       8       0   .init       
-     rst                                       C2A6       0       0       0   .init       
-     Keyboard                                  C2A6       D      13       5   .init       
-     scan                                      C2B3       A      10       0   .init       
-     scanSW                                    C2BD      1C      28       0   .init       
-     PB                                        C2D9       5       5       0   .init       
-     SW                                        C2DE       A      10       0   .init       
-     swcheck                                   C2E8       9       9       0   .init       
-     exitSW                                    C2F1       1       1       0   .init       
-     Search                                    C2F2       5       5       1   .init       
-     top                                       C2F7       7       7       0   .init       
-     check                                     C2FE       C      12       0   .init       
-     match                                     C30A       1       1       0   .init       
-     delay                                     C30B       4       4       3   .init       
-     loop                                      C30F       5       5       0   .init       
-     RTI_ISR                                   C314       A      10       0   .init       
-     DCtst                                     C31E       7       7       0   .init       
-     timing                                    C325       7       7       0   .init       
-     postDelay                                 C32C      10      16       0   .init       
-     nocarry1                                  C33C      17      23       0   .init       
-     nocarry2                                  C353       6       6       0   .init       
-     endrti                                    C359       6       6       0   .init       
-     drawscreenDL                              C35F       9       9       0   .init       
-     DCmtr                                     C368      1E      30       1   .init       
-     s1                                        C386       5       5       0   .init       
-     s2                                        C38B       5       5       0   .init       
-     STPmtr                                    C390       D      13       1   .init       
-     harvester                                 C39D      24      36       0   .init       
-     rstcnt1                                   C3C1       6       6       0   .init       
-     seeder                                    C3C7      26      38       0   .init       
-     rstcnt2                                   C3ED       6       6       0   .init       
-     chisel                                    C3F3      24      36       0   .init       
-     rstcnt3                                   C417       6       6       0   .init       
-     endSTP                                    C41D       1       1       0   .init       
-     dcLED                                     C41E       E      14       1   .init       
-     Pattern                                   C42C      1C      28       0   .init       
-     wtr1                                      C448       9       9       0   .init       
-     fert0                                     C451      15      21       0   .init       
-     fert1                                     C466       9       9       0   .init       
+     nextpat                                   C320       5       5       0   .init       
+     setup                                     C325      1C      28       0   .init       
+     start                                     C341       F      15       1   .init       
+     b1                                        C350       7       7       0   .init       
+     nxt                                       C357       8       8       0   .init       
+     rst                                       C35F       0       0       0   .init       
+     Keyboard                                  C35F       D      13       5   .init       
+     scan                                      C36C       A      10       0   .init       
+     scanSW                                    C376       9       9       0   .init       
+     hold1                                     C37F       5       5       0   .init       
+     hold2                                     C384      15      21       0   .init       
+     PB                                        C399       5       5       0   .init       
+     SW                                        C39E       A      10       0   .init       
+     swcheck                                   C3A8       9       9       0   .init       
+     exitSW                                    C3B1       1       1       0   .init       
+     Search                                    C3B2       5       5       1   .init       
+     top                                       C3B7       7       7       0   .init       
+     match                                     C3BE       1       1       0   .init       
+     hold11                                    C3BF       5       5       0   .init       
+     hold21                                    C3C4      14      20       0   .init       
+     loop                                      C3D8       5       5       0   .init       
+     RTI_ISR                                   C3DD       E      14       0   .init       
+     setupdone                                 C3EB       F      15       0   .init       
+     STPtst                                    C3FA       A      10       0   .init       
+     DCtst                                     C404       A      10       0   .init       
+     timing                                    C40E       7       7       0   .init       
+     postDelay                                 C415      10      16       0   .init       
+     nocarry1                                  C425      17      23       0   .init       
+     nocarry2                                  C43C       6       6       0   .init       
+     endrti                                    C442       6       6       0   .init       
+     drawscreenDL                              C448       9       9       0   .init       
+     pestLED                                   C451       A      10       0   .init       
+     active                                    C45B       A      10       0   .init       
+     DCmtr                                     C465      1E      30       1   .init       
+     s1                                        C483       5       5       0   .init       
+     s2                                        C488       5       5       0   .init       
+     STPmtr                                    C48D       D      13       1   .init       
+     harvester                                 C49A      24      36       0   .init       
+     rstcnt1                                   C4BE       6       6       0   .init       
+     seeder                                    C4C4      26      38       0   .init       
+     rstcnt2                                   C4EA       6       6       0   .init       
+     chisel                                    C4F0      24      36       0   .init       
+     rstcnt3                                   C514       6       6       0   .init       
+     endSTP                                    C51A       1       1       0   .init       
+     dcLED                                     C51B       E      14       1   .init       
+     Pattern                                   C529      1C      28       0   .init       
+     wtr1                                      C545       9       9       0   .init       
+     fert0                                     C54E      15      21       0   .init       
+     fert1                                     C563       9       9       0   .init       
 - VARIABLES:
      disp                                       502      21      33     110   my_variable 
      menuNum                                    523       1       1       5   my_variable 
-     gamestate                                  524       1       1      12   my_variable 
-     timer                                      525       2       2       6   my_variable 
-     seconds                                    527       2       2       4   my_variable 
+     gamestate                                  524       1       1      14   my_variable 
+     timer                                      525       2       2       7   my_variable 
+     seconds                                    527       2       2       7   my_variable 
      Counter                                    529       1       1      14   my_variable 
      tON                                        52A       1       1       4   my_variable 
-     rtiCtrl                                    52B       1       1      18   my_variable 
+     rtiCtrl                                    52B       1       1      20   my_variable 
      drawDL                                     52C       2       2      20   my_variable 
-     fertDC                                     52E       1       1       6   my_variable 
-     wtrDC                                      52F       1       1       7   my_variable 
+     fertDC                                     52E       1       1       9   my_variable 
+     wtrDC                                      52F       1       1      10   my_variable 
      STPcnt                                     530       1       1      11   my_variable 
      SWstatus                                   531       1       1       6   my_variable 
-     wtrctrldisp                                532      21      33      56   my_variable 
-     fertctrldisp                               553      21      33      43   my_variable 
-     exitflg                                    574       1       1       4   my_variable 
-     harv                                      C543      21      33       1   my_constants
-     welcome                                   C564      21      33       1   my_constants
-     mainmenu                                  C585      21      33       5   my_constants
-     sub2                                      C5A6      21      33       3   my_constants
-     sub1                                      C5C7      21      33       3   my_constants
-     err1                                      C5E8      21      33       1   my_constants
-     err2                                      C609      21      33       1   my_constants
-     err3                                      C62A      21      33       1   my_constants
-     fertscreen                                C64B      21      33       1   my_constants
-     wtrscreen                                 C66C      21      33       1   my_constants
-     tth                                       C68D      21      33       1   my_constants
-     tth2                                      C6AE      21      33       1   my_constants
-     ledpat                                    C6CF       5       5       1   my_constants
-     PlantLED                                  C6D4      20      32       1   my_constants
-     PlowLED                                   C6F4      20      32       1   my_constants
-     fertLED                                   C714       2       2       2   my_constants
-     wtrLED                                    C716       2       2       2   my_constants
-     Kseq                                      C718       5       5       1   my_constants
-     table                                     C71D      10      16       1   my_constants
-     seq                                       C72D       4       4       3   my_constants
+     wtrctrldisp                                532      21      33      72   my_variable 
+     fertctrldisp                               553      21      33      55   my_variable 
+     pestdisp                                   574      21      33      33   my_variable 
+     exitflg                                    595       1       1       4   my_variable 
+     cropstats                                  596       1       1      16   my_variable 
+     temp                                       597       1       1       0   my_variable 
+     keyflg                                     598       1       1       7   my_variable 
+     gametime                                   599       2       2       4   my_variable 
+     lastscreen                                 59B       1       1       3   my_variable 
+     harv                                      C640      21      33       1   my_constants
+     welcome                                   C661      21      33       1   my_constants
+     mainmenu                                  C682      21      33       5   my_constants
+     sub2                                      C6A3      21      33       3   my_constants
+     sub1                                      C6C4      21      33       3   my_constants
+     err1                                      C6E5      21      33       2   my_constants
+     err2                                      C706      21      33       1   my_constants
+     err3                                      C727      21      33       1   my_constants
+     fertscreen                                C748      21      33       1   my_constants
+     wtrscreen                                 C769      21      33       1   my_constants
+     tth                                       C78A      21      33       1   my_constants
+     tth2                                      C7AB      21      33       1   my_constants
+     ferterr                                   C7CC      21      33       1   my_constants
+     wtrerr                                    C7ED      21      33       1   my_constants
+     fertdisp                                  C80E      21      33       1   my_constants
+     wtrdisp                                   C82F      21      33       1   my_constants
+     pesterr                                   C850      21      33       0   my_constants
+     ledpat                                    C871       5       5       1   my_constants
+     PlantLED                                  C876      20      32       1   my_constants
+     PlowLED                                   C896      20      32       1   my_constants
+     fertLED                                   C8B6       2       2       2   my_constants
+     wtrLED                                    C8B8       2       2       2   my_constants
+     Kseq                                      C8BA       5       5       1   my_constants
+     table                                     C8BF      10      16       1   my_constants
+     seq                                       C8CF       4       4       3   my_constants
 - LABELS:
      __SEG_END_SSTACK                           500       0       0       1               
      CRGFLG                                      37       0       0       0   .text       
-     port_t                                     240       0       0       7   .text       
-     port_s                                     248       0       0       8   .text       
+     port_t                                     240       0       0       9   .text       
+     port_s                                     248       0       0      10   .text       
      port_p                                     258       0       0       1   .text       
 MODULE:                 -- lcddisp.c.o --
 - PROCEDURES:
-     delay_ms                                  C46F      17      23       5   .text       
-     init_LCD                                  C486      52      82       1   .text       
-     display_string                            C4D8      38      56       6   .text       
-     epulse                                    C510      24      36       3   .text       
-     sendCommand                               C534       F      15       7   .text       
+     delay_ms                                  C56C      17      23       5   .text       
+     init_LCD                                  C583      52      82       1   .text       
+     display_string                            C5D5      38      56       6   .text       
+     epulse                                    C60D      24      36       3   .text       
+     sendCommand                               C631       F      15       7   .text       
 - VARIABLES:
      data                                       500       2       2       4   .bss        
 MODULE:                 -- mc9s12e128.c.o --
@@ -714,84 +731,91 @@ MODULE:                 -- mc9s12e128.c.o --
      _PIFAD                                     27E       2       2       0   .abs_section_27e
 MODULE:                 -- fertilize.asm.o --
 - PROCEDURES:
-     fertilize                                 C731      1E      30       1   fertilize.asm._SEC000000
-     fert                                      C74F      1F      31       0   fertilize.asm._SEC000000
-     wtr                                       C76E      1F      31       0   fertilize.asm._SEC000000
-     error                                     C78D       7       7       0   fertilize.asm._SEC000000
+     fertilize                                 C8D3      1E      30       1   fertilize.asm._SEC000000
+     fert                                      C8F1      28      40       0   fertilize.asm._SEC000000
+     wtr                                       C919      28      40       0   fertilize.asm._SEC000000
+     error                                     C941       7       7       0   fertilize.asm._SEC000000
 - VARIABLES:
 MODULE:                 -- newcrop.asm.o --
 - PROCEDURES:
-     newcrop                                   C794       E      14       1   newcrop.asm._SEC000000
-     klp                                       C7A2      15      21       1   newcrop.asm._SEC000000
-     plant                                     C7B7      26      38       0   newcrop.asm._SEC000000
-     pl2                                       C7DD      24      36       0   newcrop.asm._SEC000000
-     endplant1                                 C801       A      10       0   newcrop.asm._SEC000000
-     space                                     C80B      38      56       0   newcrop.asm._SEC000000
-     plow                                      C843      13      19       0   newcrop.asm._SEC000000
-     pl1                                       C856      24      36       0   newcrop.asm._SEC000000
-     endplow2                                  C87A      12      18       0   newcrop.asm._SEC000000
-     space2                                    C88C      38      56       0   newcrop.asm._SEC000000
-     error1                                    C8C4       7       7       0   newcrop.asm._SEC000000
-     error2                                    C8CB       9       9       0   newcrop.asm._SEC000000
+     newcrop                                   C948       E      14       1   newcrop.asm._SEC000000
+     klp                                       C956      15      21       1   newcrop.asm._SEC000000
+     plant                                     C96B      2A      42       0   newcrop.asm._SEC000000
+     pl2                                       C995      24      36       0   newcrop.asm._SEC000000
+     endplant1                                 C9B9       A      10       0   newcrop.asm._SEC000000
+     space                                     C9C3      38      56       0   newcrop.asm._SEC000000
+     plow                                      C9FB      13      19       0   newcrop.asm._SEC000000
+     pl1                                       CA0E      24      36       0   newcrop.asm._SEC000000
+     endplow2                                  CA32      12      18       0   newcrop.asm._SEC000000
+     space2                                    CA44      38      56       0   newcrop.asm._SEC000000
+     error1                                    CA7C       7       7       0   newcrop.asm._SEC000000
+     error2                                    CA83       9       9       0   newcrop.asm._SEC000000
 - VARIABLES:
 MODULE:                 -- drawscreen.asm.o --
 - PROCEDURES:
-     drawscreen                                C8D4       9       9      25   drawscreen.asm._SEC000000
-     RTILP                                     C8DD      12      18       0   drawscreen.asm._SEC000000
+     drawscreen                                CA8C       9       9      31   drawscreen.asm._SEC000000
+     RTILP                                     CA95      12      18       0   drawscreen.asm._SEC000000
 - VARIABLES:
 MODULE:                 -- growth.asm.o --
 - PROCEDURES:
-     growth                                    C8EF      14      20       1   growth.asm._SEC000000
-     growing                                   C903      AB     171       0   growth.asm._SEC000000
-     matured                                   C9AE      AB     171       0   growth.asm._SEC000000
-     harvest                                   CA59       6       6       0   growth.asm._SEC000000
+     growth                                    CAA7      2F      47       1   growth.asm._SEC000000
+     endgrow                                   CAD6       1       1       0   growth.asm._SEC000000
+     growing                                   CAD7      E5     229       0   growth.asm._SEC000000
+     matured                                   CBBC      E5     229       0   growth.asm._SEC000000
+     harvest                                   CCA1      38      56       0   growth.asm._SEC000000
 - VARIABLES:
 MODULE:                 -- pushb.asm.o --
 - PROCEDURES:
-     pushb                                     CA5F      1F      31       1   pushb.asm._SEC000000
-     mainMenu                                  CA7E       8       8       0   pushb.asm._SEC000000
-     fertMenu                                  CA86       8       8       0   pushb.asm._SEC000000
-     fin                                       CA8E       C      12       0   pushb.asm._SEC000000
-     wait                                      CA9A      14      20       0   pushb.asm._SEC000000
+     pushb                                     CCD9      29      41       1   pushb.asm._SEC000000
+     mainMenu                                  CD02       8       8       0   pushb.asm._SEC000000
+     fertMenu                                  CD0A       8       8       0   pushb.asm._SEC000000
+     lastsscreen                               CD12       8       8       0   pushb.asm._SEC000000
+     fin                                       CD1A       C      12       0   pushb.asm._SEC000000
+     wait                                      CD26      14      20       0   pushb.asm._SEC000000
 - VARIABLES:
 MODULE:                 -- harvesting.asm.o --
 - PROCEDURES:
-     harvesting                                CAAE      10      16       1   harvesting.asm._SEC000000
-     hv1                                       CABE      2E      46       0   harvesting.asm._SEC000000
+     harvesting                                CD3A      10      16       1   harvesting.asm._SEC000000
+     hv1                                       CD4A      51      81       0   harvesting.asm._SEC000000
 - VARIABLES:
 MODULE:                 -- flowctrl.asm.o --
 - PROCEDURES:
-     flowctrl                                  CAEC      1D      29       1   flowctrl.asm._SEC000000
-     wtrctrl                                   CB09      25      37       0   flowctrl.asm._SEC000000
-     increase                                  CB2E      1F      31       0   flowctrl.asm._SEC000000
-     inc                                       CB4D      2B      43       0   flowctrl.asm._SEC000000
-     maxi                                      CB78      18      24       0   flowctrl.asm._SEC000000
-     decrease                                  CB90      1C      28       0   flowctrl.asm._SEC000000
-     dec                                       CBAC      26      38       0   flowctrl.asm._SEC000000
-     fertctrl                                  CBD2      25      37       0   flowctrl.asm._SEC000000
-     increase1                                 CBF7      1A      26       0   flowctrl.asm._SEC000000
-     inc1                                      CC11      1F      31       0   flowctrl.asm._SEC000000
-     decrease1                                 CC30      1A      26       0   flowctrl.asm._SEC000000
-     dec1                                      CC4A      21      33       0   flowctrl.asm._SEC000000
-     endflow                                   CC6B      1A      26       0   flowctrl.asm._SEC000000
-     mainMen                                   CC85       C      12       0   flowctrl.asm._SEC000000
-     fertMen                                   CC91       C      12       0   flowctrl.asm._SEC000000
+     flowctrl                                  CD9B      1B      27       1   flowctrl.asm._SEC000000
+     contflw                                   CDB6      13      19       0   flowctrl.asm._SEC000000
+     wtrctrl                                   CDC9      11      17       0   flowctrl.asm._SEC000000
+     notwatered                                CDDA       6       6       0   flowctrl.asm._SEC000000
+     wtrlp                                     CDE0      28      40       0   flowctrl.asm._SEC000000
+     increase                                  CE08      1F      31       0   flowctrl.asm._SEC000000
+     inc                                       CE27      2D      45       0   flowctrl.asm._SEC000000
+     maxi                                      CE54      18      24       0   flowctrl.asm._SEC000000
+     decrease                                  CE6C      1C      28       0   flowctrl.asm._SEC000000
+     dec                                       CE88      26      38       0   flowctrl.asm._SEC000000
+     fertctrl                                  CEAE      11      17       0   flowctrl.asm._SEC000000
+     notfert                                   CEBF       6       6       0   flowctrl.asm._SEC000000
+     fertlp                                    CEC5      28      40       0   flowctrl.asm._SEC000000
+     increase1                                 CEED      1A      26       0   flowctrl.asm._SEC000000
+     inc1                                      CF07      1F      31       0   flowctrl.asm._SEC000000
+     decrease1                                 CF26      1C      28       0   flowctrl.asm._SEC000000
+     dec1                                      CF42      21      33       0   flowctrl.asm._SEC000000
+     endflow                                   CF63      1A      26       0   flowctrl.asm._SEC000000
+     mainMen                                   CF7D       C      12       0   flowctrl.asm._SEC000000
+     fertMen                                   CF89       C      12       0   flowctrl.asm._SEC000000
 - VARIABLES:
 
 *********************************************************************************************
 MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
-  main.asm.o                                 115   1135    494
+  main.asm.o                                 154   1388    659
   lcddisp.c.o                                  2    212      0
   mc9s12e128.c.o                             352      0      0
-  fertilize.asm.o                              0     99      0
-  newcrop.asm.o                                0    320      0
+  fertilize.asm.o                              0    117      0
+  newcrop.asm.o                                0    324      0
   drawscreen.asm.o                             0     27      0
-  growth.asm.o                                 0    368      0
-  pushb.asm.o                                  0     79      0
-  harvesting.asm.o                             0     62      0
-  flowctrl.asm.o                               0    433      0
+  growth.asm.o                                 0    562      0
+  pushb.asm.o                                  0     97      0
+  harvesting.asm.o                             0     97      0
+  flowctrl.asm.o                               0    506      0
   other                                      256      4      0
 
 *********************************************************************************************
@@ -803,16 +827,19 @@ SECTION: ".text"
 SECTION: ".bss"
   data 
 SECTION: ".init"
-  _Startup Entry nextpat setup start b1 nxt Keyboard rst scan scanSW PB SW 
-  swcheck exitSW Search top check match delay loop RTI_ISR DCtst timing 
-  postDelay nocarry1 nocarry2 endrti drawscreenDL DCmtr s1 s2 STPmtr harvester 
-  rstcnt1 seeder rstcnt2 chisel rstcnt3 endSTP dcLED Pattern wtr1 fert0 fert1 
+  _Startup Entry nextpat setup start b1 nxt Keyboard rst scan scanSW hold1 
+  hold2 PB SW swcheck exitSW Search top match hold11 hold21 loop RTI_ISR 
+  setupdone STPtst DCtst timing postDelay nocarry1 nocarry2 endrti drawscreenDL 
+  pestLED active DCmtr s1 s2 STPmtr harvester rstcnt1 seeder rstcnt2 chisel 
+  rstcnt3 endSTP dcLED Pattern wtr1 fert0 fert1 
 SECTION: "my_constants"
   harv welcome mainmenu sub2 sub1 err1 err2 err3 fertscreen wtrscreen tth tth2 
-  ledpat PlantLED PlowLED fertLED wtrLED Kseq table seq 
+  ferterr wtrerr fertdisp wtrdisp pesterr ledpat PlantLED PlowLED fertLED 
+  wtrLED Kseq table seq 
 SECTION: "my_variable"
   disp menuNum gamestate timer seconds Counter tON rtiCtrl drawDL fertDC wtrDC 
-  STPcnt SWstatus wtrctrldisp fertctrldisp exitflg 
+  STPcnt SWstatus wtrctrldisp fertctrldisp pestdisp exitflg cropstats temp 
+  keyflg gametime lastscreen 
 SECTION: ".abs_section_8"
   _PORTE 
 SECTION: ".abs_section_9"
@@ -1366,14 +1393,14 @@ SECTION: "newcrop.asm._SEC000000"
 SECTION: "drawscreen.asm._SEC000000"
   drawscreen RTILP 
 SECTION: "growth.asm._SEC000000"
-  growth growing matured harvest 
+  growth endgrow growing matured harvest 
 SECTION: "pushb.asm._SEC000000"
-  pushb mainMenu fertMenu fin wait 
+  pushb mainMenu fertMenu lastsscreen fin wait 
 SECTION: "harvesting.asm._SEC000000"
   harvesting hv1 
 SECTION: "flowctrl.asm._SEC000000"
-  flowctrl wtrctrl increase inc maxi decrease dec fertctrl increase1 inc1 
-  decrease1 dec1 endflow mainMen fertMen 
+  flowctrl contflw wtrctrl notwatered wtrlp increase inc maxi decrease dec 
+  fertctrl notfert fertlp increase1 inc1 decrease1 dec1 endflow mainMen fertMen 
 
 *********************************************************************************************
 OBJECT LIST SORTED BY ADDRESS
@@ -1607,14 +1634,14 @@ OBJECT LIST SORTED BY ADDRESS
      _PMFMODC                                   234       2       2       0   .abs_section_234
      _PMFDTMC                                   236       2       2       0   .abs_section_236
      _PTT                                       240       1       1       0   .abs_section_240
-     port_t                                     240       0       0       7   .text       
+     port_t                                     240       0       0       9   .text       
      _PTIT                                      241       1       1       0   .abs_section_241
      _DDRT                                      242       1       1       0   .abs_section_242
      _RDRT                                      243       1       1       0   .abs_section_243
      _PERT                                      244       1       1       0   .abs_section_244
      _PPST                                      245       1       1       0   .abs_section_245
      _PTS                                       248       1       1       0   .abs_section_248
-     port_s                                     248       0       0       8   .text       
+     port_s                                     248       0       0      10   .text       
      _PTIS                                      249       1       1       0   .abs_section_249
      _DDRS                                      24A       1       1       0   .abs_section_24a
      _RDRS                                      24B       1       1       0   .abs_section_24b
@@ -1659,134 +1686,158 @@ OBJECT LIST SORTED BY ADDRESS
      data                                       500       2       2       4   .bss        
      disp                                       502      21      33     110   my_variable 
      menuNum                                    523       1       1       5   my_variable 
-     gamestate                                  524       1       1      12   my_variable 
-     timer                                      525       2       2       6   my_variable 
-     seconds                                    527       2       2       4   my_variable 
+     gamestate                                  524       1       1      14   my_variable 
+     timer                                      525       2       2       7   my_variable 
+     seconds                                    527       2       2       7   my_variable 
      Counter                                    529       1       1      14   my_variable 
      tON                                        52A       1       1       4   my_variable 
-     rtiCtrl                                    52B       1       1      18   my_variable 
+     rtiCtrl                                    52B       1       1      20   my_variable 
      drawDL                                     52C       2       2      20   my_variable 
-     fertDC                                     52E       1       1       6   my_variable 
-     wtrDC                                      52F       1       1       7   my_variable 
+     fertDC                                     52E       1       1       9   my_variable 
+     wtrDC                                      52F       1       1      10   my_variable 
      STPcnt                                     530       1       1      11   my_variable 
      SWstatus                                   531       1       1       6   my_variable 
-     wtrctrldisp                                532      21      33      56   my_variable 
-     fertctrldisp                               553      21      33      43   my_variable 
-     exitflg                                    574       1       1       4   my_variable 
+     wtrctrldisp                                532      21      33      72   my_variable 
+     fertctrldisp                               553      21      33      55   my_variable 
+     pestdisp                                   574      21      33      33   my_variable 
+     exitflg                                    595       1       1       4   my_variable 
+     cropstats                                  596       1       1      16   my_variable 
+     temp                                       597       1       1       0   my_variable 
+     keyflg                                     598       1       1       7   my_variable 
+     gametime                                   599       2       2       4   my_variable 
+     lastscreen                                 59B       1       1       3   my_variable 
      _Startup                                  C000       0       0       0   .init       
-     Entry                                     C000     272     626       0   .init       
-     nextpat                                   C272       7       7       0   .init       
-     setup                                     C279       F      15       0   .init       
-     start                                     C288       F      15       1   .init       
-     b1                                        C297       7       7       0   .init       
-     nxt                                       C29E       8       8       0   .init       
-     Keyboard                                  C2A6       D      13       5   .init       
-     rst                                       C2A6       0       0       0   .init       
-     scan                                      C2B3       A      10       0   .init       
-     scanSW                                    C2BD      1C      28       0   .init       
-     PB                                        C2D9       5       5       0   .init       
-     SW                                        C2DE       A      10       0   .init       
-     swcheck                                   C2E8       9       9       0   .init       
-     exitSW                                    C2F1       1       1       0   .init       
-     Search                                    C2F2       5       5       1   .init       
-     top                                       C2F7       7       7       0   .init       
-     check                                     C2FE       C      12       0   .init       
-     match                                     C30A       1       1       0   .init       
-     delay                                     C30B       4       4       3   .init       
-     loop                                      C30F       5       5       0   .init       
-     RTI_ISR                                   C314       A      10       0   .init       
-     DCtst                                     C31E       7       7       0   .init       
-     timing                                    C325       7       7       0   .init       
-     postDelay                                 C32C      10      16       0   .init       
-     nocarry1                                  C33C      17      23       0   .init       
-     nocarry2                                  C353       6       6       0   .init       
-     endrti                                    C359       6       6       0   .init       
-     drawscreenDL                              C35F       9       9       0   .init       
-     DCmtr                                     C368      1E      30       1   .init       
-     s1                                        C386       5       5       0   .init       
-     s2                                        C38B       5       5       0   .init       
-     STPmtr                                    C390       D      13       1   .init       
-     harvester                                 C39D      24      36       0   .init       
-     rstcnt1                                   C3C1       6       6       0   .init       
-     seeder                                    C3C7      26      38       0   .init       
-     rstcnt2                                   C3ED       6       6       0   .init       
-     chisel                                    C3F3      24      36       0   .init       
-     rstcnt3                                   C417       6       6       0   .init       
-     endSTP                                    C41D       1       1       0   .init       
-     dcLED                                     C41E       E      14       1   .init       
-     Pattern                                   C42C      1C      28       0   .init       
-     wtr1                                      C448       9       9       0   .init       
-     fert0                                     C451      15      21       0   .init       
-     fert1                                     C466       9       9       0   .init       
-     delay_ms                                  C46F      17      23       5   .text       
-     init_LCD                                  C486      52      82       1   .text       
-     display_string                            C4D8      38      56       6   .text       
-     epulse                                    C510      24      36       3   .text       
-     sendCommand                               C534       F      15       7   .text       
-     harv                                      C543      21      33       1   my_constants
-     welcome                                   C564      21      33       1   my_constants
-     mainmenu                                  C585      21      33       5   my_constants
-     sub2                                      C5A6      21      33       3   my_constants
-     sub1                                      C5C7      21      33       3   my_constants
-     err1                                      C5E8      21      33       1   my_constants
-     err2                                      C609      21      33       1   my_constants
-     err3                                      C62A      21      33       1   my_constants
-     fertscreen                                C64B      21      33       1   my_constants
-     wtrscreen                                 C66C      21      33       1   my_constants
-     tth                                       C68D      21      33       1   my_constants
-     tth2                                      C6AE      21      33       1   my_constants
-     ledpat                                    C6CF       5       5       1   my_constants
-     PlantLED                                  C6D4      20      32       1   my_constants
-     PlowLED                                   C6F4      20      32       1   my_constants
-     fertLED                                   C714       2       2       2   my_constants
-     wtrLED                                    C716       2       2       2   my_constants
-     Kseq                                      C718       5       5       1   my_constants
-     table                                     C71D      10      16       1   my_constants
-     seq                                       C72D       4       4       3   my_constants
-     fertilize                                 C731      1E      30       1   fertilize.asm._SEC000000
-     fert                                      C74F      1F      31       0   fertilize.asm._SEC000000
-     wtr                                       C76E      1F      31       0   fertilize.asm._SEC000000
-     error                                     C78D       7       7       0   fertilize.asm._SEC000000
-     newcrop                                   C794       E      14       1   newcrop.asm._SEC000000
-     klp                                       C7A2      15      21       1   newcrop.asm._SEC000000
-     plant                                     C7B7      26      38       0   newcrop.asm._SEC000000
-     pl2                                       C7DD      24      36       0   newcrop.asm._SEC000000
-     endplant1                                 C801       A      10       0   newcrop.asm._SEC000000
-     space                                     C80B      38      56       0   newcrop.asm._SEC000000
-     plow                                      C843      13      19       0   newcrop.asm._SEC000000
-     pl1                                       C856      24      36       0   newcrop.asm._SEC000000
-     endplow2                                  C87A      12      18       0   newcrop.asm._SEC000000
-     space2                                    C88C      38      56       0   newcrop.asm._SEC000000
-     error1                                    C8C4       7       7       0   newcrop.asm._SEC000000
-     error2                                    C8CB       9       9       0   newcrop.asm._SEC000000
-     drawscreen                                C8D4       9       9      25   drawscreen.asm._SEC000000
-     RTILP                                     C8DD      12      18       0   drawscreen.asm._SEC000000
-     growth                                    C8EF      14      20       1   growth.asm._SEC000000
-     growing                                   C903      AB     171       0   growth.asm._SEC000000
-     matured                                   C9AE      AB     171       0   growth.asm._SEC000000
-     harvest                                   CA59       6       6       0   growth.asm._SEC000000
-     pushb                                     CA5F      1F      31       1   pushb.asm._SEC000000
-     mainMenu                                  CA7E       8       8       0   pushb.asm._SEC000000
-     fertMenu                                  CA86       8       8       0   pushb.asm._SEC000000
-     fin                                       CA8E       C      12       0   pushb.asm._SEC000000
-     wait                                      CA9A      14      20       0   pushb.asm._SEC000000
-     harvesting                                CAAE      10      16       1   harvesting.asm._SEC000000
-     hv1                                       CABE      2E      46       0   harvesting.asm._SEC000000
-     flowctrl                                  CAEC      1D      29       1   flowctrl.asm._SEC000000
-     wtrctrl                                   CB09      25      37       0   flowctrl.asm._SEC000000
-     increase                                  CB2E      1F      31       0   flowctrl.asm._SEC000000
-     inc                                       CB4D      2B      43       0   flowctrl.asm._SEC000000
-     maxi                                      CB78      18      24       0   flowctrl.asm._SEC000000
-     decrease                                  CB90      1C      28       0   flowctrl.asm._SEC000000
-     dec                                       CBAC      26      38       0   flowctrl.asm._SEC000000
-     fertctrl                                  CBD2      25      37       0   flowctrl.asm._SEC000000
-     increase1                                 CBF7      1A      26       0   flowctrl.asm._SEC000000
-     inc1                                      CC11      1F      31       0   flowctrl.asm._SEC000000
-     decrease1                                 CC30      1A      26       0   flowctrl.asm._SEC000000
-     dec1                                      CC4A      21      33       0   flowctrl.asm._SEC000000
-     endflow                                   CC6B      1A      26       0   flowctrl.asm._SEC000000
-     mainMen                                   CC85       C      12       0   flowctrl.asm._SEC000000
-     fertMen                                   CC91       C      12       0   flowctrl.asm._SEC000000
+     Entry                                     C000     320     800       0   .init       
+     nextpat                                   C320       5       5       0   .init       
+     setup                                     C325      1C      28       0   .init       
+     start                                     C341       F      15       1   .init       
+     b1                                        C350       7       7       0   .init       
+     nxt                                       C357       8       8       0   .init       
+     Keyboard                                  C35F       D      13       5   .init       
+     rst                                       C35F       0       0       0   .init       
+     scan                                      C36C       A      10       0   .init       
+     scanSW                                    C376       9       9       0   .init       
+     hold1                                     C37F       5       5       0   .init       
+     hold2                                     C384      15      21       0   .init       
+     PB                                        C399       5       5       0   .init       
+     SW                                        C39E       A      10       0   .init       
+     swcheck                                   C3A8       9       9       0   .init       
+     exitSW                                    C3B1       1       1       0   .init       
+     Search                                    C3B2       5       5       1   .init       
+     top                                       C3B7       7       7       0   .init       
+     match                                     C3BE       1       1       0   .init       
+     hold11                                    C3BF       5       5       0   .init       
+     hold21                                    C3C4      14      20       0   .init       
+     loop                                      C3D8       5       5       0   .init       
+     RTI_ISR                                   C3DD       E      14       0   .init       
+     setupdone                                 C3EB       F      15       0   .init       
+     STPtst                                    C3FA       A      10       0   .init       
+     DCtst                                     C404       A      10       0   .init       
+     timing                                    C40E       7       7       0   .init       
+     postDelay                                 C415      10      16       0   .init       
+     nocarry1                                  C425      17      23       0   .init       
+     nocarry2                                  C43C       6       6       0   .init       
+     endrti                                    C442       6       6       0   .init       
+     drawscreenDL                              C448       9       9       0   .init       
+     pestLED                                   C451       A      10       0   .init       
+     active                                    C45B       A      10       0   .init       
+     DCmtr                                     C465      1E      30       1   .init       
+     s1                                        C483       5       5       0   .init       
+     s2                                        C488       5       5       0   .init       
+     STPmtr                                    C48D       D      13       1   .init       
+     harvester                                 C49A      24      36       0   .init       
+     rstcnt1                                   C4BE       6       6       0   .init       
+     seeder                                    C4C4      26      38       0   .init       
+     rstcnt2                                   C4EA       6       6       0   .init       
+     chisel                                    C4F0      24      36       0   .init       
+     rstcnt3                                   C514       6       6       0   .init       
+     endSTP                                    C51A       1       1       0   .init       
+     dcLED                                     C51B       E      14       1   .init       
+     Pattern                                   C529      1C      28       0   .init       
+     wtr1                                      C545       9       9       0   .init       
+     fert0                                     C54E      15      21       0   .init       
+     fert1                                     C563       9       9       0   .init       
+     delay_ms                                  C56C      17      23       5   .text       
+     init_LCD                                  C583      52      82       1   .text       
+     display_string                            C5D5      38      56       6   .text       
+     epulse                                    C60D      24      36       3   .text       
+     sendCommand                               C631       F      15       7   .text       
+     harv                                      C640      21      33       1   my_constants
+     welcome                                   C661      21      33       1   my_constants
+     mainmenu                                  C682      21      33       5   my_constants
+     sub2                                      C6A3      21      33       3   my_constants
+     sub1                                      C6C4      21      33       3   my_constants
+     err1                                      C6E5      21      33       2   my_constants
+     err2                                      C706      21      33       1   my_constants
+     err3                                      C727      21      33       1   my_constants
+     fertscreen                                C748      21      33       1   my_constants
+     wtrscreen                                 C769      21      33       1   my_constants
+     tth                                       C78A      21      33       1   my_constants
+     tth2                                      C7AB      21      33       1   my_constants
+     ferterr                                   C7CC      21      33       1   my_constants
+     wtrerr                                    C7ED      21      33       1   my_constants
+     fertdisp                                  C80E      21      33       1   my_constants
+     wtrdisp                                   C82F      21      33       1   my_constants
+     pesterr                                   C850      21      33       0   my_constants
+     ledpat                                    C871       5       5       1   my_constants
+     PlantLED                                  C876      20      32       1   my_constants
+     PlowLED                                   C896      20      32       1   my_constants
+     fertLED                                   C8B6       2       2       2   my_constants
+     wtrLED                                    C8B8       2       2       2   my_constants
+     Kseq                                      C8BA       5       5       1   my_constants
+     table                                     C8BF      10      16       1   my_constants
+     seq                                       C8CF       4       4       3   my_constants
+     fertilize                                 C8D3      1E      30       1   fertilize.asm._SEC000000
+     fert                                      C8F1      28      40       0   fertilize.asm._SEC000000
+     wtr                                       C919      28      40       0   fertilize.asm._SEC000000
+     error                                     C941       7       7       0   fertilize.asm._SEC000000
+     newcrop                                   C948       E      14       1   newcrop.asm._SEC000000
+     klp                                       C956      15      21       1   newcrop.asm._SEC000000
+     plant                                     C96B      2A      42       0   newcrop.asm._SEC000000
+     pl2                                       C995      24      36       0   newcrop.asm._SEC000000
+     endplant1                                 C9B9       A      10       0   newcrop.asm._SEC000000
+     space                                     C9C3      38      56       0   newcrop.asm._SEC000000
+     plow                                      C9FB      13      19       0   newcrop.asm._SEC000000
+     pl1                                       CA0E      24      36       0   newcrop.asm._SEC000000
+     endplow2                                  CA32      12      18       0   newcrop.asm._SEC000000
+     space2                                    CA44      38      56       0   newcrop.asm._SEC000000
+     error1                                    CA7C       7       7       0   newcrop.asm._SEC000000
+     error2                                    CA83       9       9       0   newcrop.asm._SEC000000
+     drawscreen                                CA8C       9       9      31   drawscreen.asm._SEC000000
+     RTILP                                     CA95      12      18       0   drawscreen.asm._SEC000000
+     growth                                    CAA7      2F      47       1   growth.asm._SEC000000
+     endgrow                                   CAD6       1       1       0   growth.asm._SEC000000
+     growing                                   CAD7      E5     229       0   growth.asm._SEC000000
+     matured                                   CBBC      E5     229       0   growth.asm._SEC000000
+     harvest                                   CCA1      38      56       0   growth.asm._SEC000000
+     pushb                                     CCD9      29      41       1   pushb.asm._SEC000000
+     mainMenu                                  CD02       8       8       0   pushb.asm._SEC000000
+     fertMenu                                  CD0A       8       8       0   pushb.asm._SEC000000
+     lastsscreen                               CD12       8       8       0   pushb.asm._SEC000000
+     fin                                       CD1A       C      12       0   pushb.asm._SEC000000
+     wait                                      CD26      14      20       0   pushb.asm._SEC000000
+     harvesting                                CD3A      10      16       1   harvesting.asm._SEC000000
+     hv1                                       CD4A      51      81       0   harvesting.asm._SEC000000
+     flowctrl                                  CD9B      1B      27       1   flowctrl.asm._SEC000000
+     contflw                                   CDB6      13      19       0   flowctrl.asm._SEC000000
+     wtrctrl                                   CDC9      11      17       0   flowctrl.asm._SEC000000
+     notwatered                                CDDA       6       6       0   flowctrl.asm._SEC000000
+     wtrlp                                     CDE0      28      40       0   flowctrl.asm._SEC000000
+     increase                                  CE08      1F      31       0   flowctrl.asm._SEC000000
+     inc                                       CE27      2D      45       0   flowctrl.asm._SEC000000
+     maxi                                      CE54      18      24       0   flowctrl.asm._SEC000000
+     decrease                                  CE6C      1C      28       0   flowctrl.asm._SEC000000
+     dec                                       CE88      26      38       0   flowctrl.asm._SEC000000
+     fertctrl                                  CEAE      11      17       0   flowctrl.asm._SEC000000
+     notfert                                   CEBF       6       6       0   flowctrl.asm._SEC000000
+     fertlp                                    CEC5      28      40       0   flowctrl.asm._SEC000000
+     increase1                                 CEED      1A      26       0   flowctrl.asm._SEC000000
+     inc1                                      CF07      1F      31       0   flowctrl.asm._SEC000000
+     decrease1                                 CF26      1C      28       0   flowctrl.asm._SEC000000
+     dec1                                      CF42      21      33       0   flowctrl.asm._SEC000000
+     endflow                                   CF63      1A      26       0   flowctrl.asm._SEC000000
+     mainMen                                   CF7D       C      12       0   flowctrl.asm._SEC000000
+     fertMen                                   CF89       C      12       0   flowctrl.asm._SEC000000
 
 *********************************************************************************************
 UNUSED-OBJECTS SECTION
@@ -1805,28 +1856,33 @@ COPYDOWN SECTION
 *********************************************************************************************
 OBJECT-DEPENDENCIES SECTION
 ---------------------------------------------------------------------------------------------
-Entry                     USES fertctrldisp wtrctrldisp STPcnt fertDC wtrDC 
-                                drawDL rtiCtrl disp Counter timer seconds tON 
-                                SWstatus gamestate exitflg __SEG_END_SSTACK init_LCD 
-                                welcome display_string ledpat 
-setup                     USES delay mainmenu display_string 
+Entry                     USES keyflg pestdisp fertctrldisp wtrctrldisp 
+                                cropstats STPcnt fertDC wtrDC drawDL rtiCtrl disp 
+                                Counter timer seconds tON SWstatus gamestate exitflg 
+                                __SEG_END_SSTACK init_LCD welcome display_string ledpat 
+setup                     USES gametime mainmenu display_string 
 start                     USES menuNum Keyboard fertilize 
 b1                        USES newcrop 
 nxt                       USES mainmenu display_string 
 Keyboard                  USES Kseq 
 scan                      USES exitflg 
-scanSW                    USES delay Search 
+hold1                     USES keyflg 
+hold2                     USES keyflg Search 
 PB                        USES pushb 
 SW                        USES SWstatus flowctrl 
 Search                    USES table 
-check                     USES delay 
-RTI_ISR                   USES rtiCtrl STPmtr 
-DCtst                     USES DCmtr 
+hold11                    USES keyflg 
+hold21                    USES keyflg 
+RTI_ISR                   USES gamestate gametime 
+setupdone                 USES keyflg rtiCtrl 
+STPtst                    USES rtiCtrl STPmtr 
+DCtst                     USES rtiCtrl DCmtr 
 timing                    USES rtiCtrl 
 postDelay                 USES gamestate timer 
 nocarry1                  USES timer seconds 
 nocarry2                  USES seconds growth 
 drawscreenDL              USES drawDL 
+pestLED                   USES timer 
 DCmtr                     USES dcLED Counter tON 
 STPmtr                    USES rtiCtrl 
 harvester                 USES Counter STPcnt seq 
@@ -1847,13 +1903,14 @@ epulse                    USES data _PTM delay_ms
 sendCommand               USES data _PTAD epulse 
 fertilize                 USES menuNum gamestate sub1 display_string Keyboard 
 fert                      USES fertDC tON rtiCtrl drawDL fertscreen drawscreen 
-                                port_t 
+                                port_t cropstats port_s 
 wtr                       USES wtrDC tON rtiCtrl drawDL wtrscreen drawscreen 
-                                port_t 
+                                port_t cropstats port_s 
 error                     USES err1 drawscreen 
 newcrop                   USES menuNum gamestate 
 klp                       USES sub2 display_string Keyboard 
 plant                     USES gamestate drawDL PlantLED disp STPcnt rtiCtrl 
+                                cropstats 
 pl2                       USES port_s disp drawscreen drawDL 
 endplant1                 USES rtiCtrl port_s 
 space                     USES port_s disp drawDL drawscreen 
@@ -1865,25 +1922,37 @@ error1                    USES err2 drawscreen
 error2                    USES err3 drawscreen klp 
 drawscreen                USES display_string rtiCtrl 
 RTILP                     USES drawDL rtiCtrl 
-growing                   USES disp gamestate 
-matured                   USES disp gamestate 
-harvest                   USES gamestate 
-pushb                     USES gamestate disp drawscreen menuNum sub2 
+growth                    USES cropstats seconds 
+growing                   USES seconds cropstats disp gamestate fertctrldisp 
+                                wtrctrldisp wtrDC fertDC 
+matured                   USES seconds cropstats disp gamestate wtrDC fertDC 
+                                fertctrldisp wtrctrldisp 
+harvest                   USES wtrDC fertDC fertctrldisp wtrctrldisp cropstats 
+                                gamestate 
+pushb                     USES gamestate disp drawscreen port_t menuNum sub2 
 mainMenu                  USES mainmenu drawscreen 
 fertMenu                  USES sub1 drawscreen 
+lastsscreen               USES lastscreen drawscreen 
 fin                       USES tth drawscreen tth2 
 wait                      USES port_p harvesting mainmenu drawscreen start 
 harvesting                USES harv drawscreen disp rtiCtrl 
 hv1                       USES disp drawDL drawscreen rtiCtrl gamestate timer 
-                                seconds 
-flowctrl                  USES SWstatus exitflg port_t 
-wtrctrl                   USES wtrctrldisp drawDL drawscreen port_t Keyboard 
+                                seconds fertctrldisp wtrctrldisp 
+flowctrl                  USES SWstatus exitflg gamestate err1 drawscreen 
+contflw                   USES port_t 
+wtrctrl                   USES cropstats wtrerr drawscreen 
+notwatered                USES wtrdisp drawscreen 
+wtrlp                     USES wtrctrldisp drawDL lastscreen drawscreen port_t 
+                                Keyboard 
 increase                  USES wtrDC wtrctrldisp 
 inc                       USES wtrDC wtrctrldisp 
 maxi                      USES wtrctrldisp 
 decrease                  USES wtrDC wtrctrldisp 
 dec                       USES wtrDC wtrctrldisp 
-fertctrl                  USES fertctrldisp drawDL drawscreen port_t Keyboard 
+fertctrl                  USES cropstats ferterr drawscreen 
+notfert                   USES fertdisp drawscreen 
+fertlp                    USES fertctrldisp lastscreen drawDL drawscreen 
+                                port_t Keyboard 
 increase1                 USES fertDC fertctrldisp 
 inc1                      USES fertDC fertctrldisp 
 decrease1                 USES fertDC wtrctrldisp 
@@ -1896,9 +1965,7 @@ fertMen                   USES sub1 drawscreen SWstatus
 DEPENDENCY TREE
 *********************************************************************************************
  RTI_ISR             
- | 
- +- STPmtr              
-      
+   
 *********************************************************************************************
 STATISTIC SECTION
 ---------------------------------------------------------------------------------------------
@@ -1906,5 +1973,5 @@ STATISTIC SECTION
 ExeFile:
 --------
 Number of blocks to be downloaded: 9
-Total size of all blocks to be downloaded: 3233
+Total size of all blocks to be downloaded: 3993
 

@@ -10,7 +10,7 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Entry,menuNum,exitflg,wtrctrldisp,fertctrldisp,SWstatus,start,port_p,sub1,sub2,mainmenu,harv,harvesting,tth,tth2,timer,seconds,STPcnt,PlantLED,wtrDC,fertDC,drawDL,rtiCtrl,port_t,RTI_ISR,CRGFLG,tON,fertscreen, wtrscreen, _Startup,port_s, err3,PlowLED, gamestate,Keyboard,err1,err2,sub2,sub1,disp,port_t
+            XDEF Entry,temp,lastscreen,pesterr,pestdisp,ferterr,wtrerr,wtrdisp,fertdisp,menuNum,cropstats,exitflg,wtrctrldisp,fertctrldisp,SWstatus,start,port_p,sub1,sub2,mainmenu,harv,harvesting,tth,tth2,timer,seconds,STPcnt,PlantLED,wtrDC,fertDC,drawDL,rtiCtrl,port_t,RTI_ISR,CRGFLG,tON,fertscreen, wtrscreen, _Startup,port_s, err3,PlowLED, gamestate,Keyboard,err1,err2,sub2,sub1,disp,port_t
             ; we use export 'Entry' as symbol. This allows us to
             ; reference 'Entry' either in the linker .prm file
             ; or from C/C++ later on
@@ -42,7 +42,13 @@ STPcnt ds.b 1
 SWstatus ds.b 1
 wtrctrldisp ds.b 33
 fertctrldisp ds.b 33
+pestdisp ds.b 33
 exitflg ds.b 1
+cropstats ds.b 1
+temp ds.b 1
+keyflg ds.b 1
+gametime ds.w 1
+lastscreen ds.b 1
 my_constants: SECTION 
 harv dc.b       "   Harvesting                   ",0
 welcome dc.b    "    Welcome         Farmtek     ",0
@@ -51,11 +57,16 @@ sub2 dc.b       "(A)Plow         (B)Plant        ",0
 sub1 dc.b       "(A)Fertilize    (B)Water        ",0
 err1 dc.b       "Plant Crop      to Continue     ",0
 err2 dc.b       "Crop Already    Planted         ",0
-err3 dc.b 		  "Field not       Plowed          ",0
+err3 dc.b 		"Field not       Plowed          ",0
 fertscreen dc.b "Fertilizing                     ",0
 wtrscreen dc.b  "Watering                        ",0
 tth       dc.b  "Time to         Harvest         ",0
 tth2      dc.b  "Press Button    To Harvest      ",0
+ferterr dc.b    "Crop Fertile                    ",0
+wtrerr dc.b     "Crop Watered                    ",0
+fertdisp dc.b   "Crop Infertile                  ",0
+wtrdisp dc.b    "Crop Not Watered                ",0
+pesterr dc.b    "Pest Detected!  Spraying Field  ",0
 ledpat dc.b $24,$81,$18,$FF,$00
 PlantLED dc.b $80,$40,$20,$10,$08,$04,$02,$01,$80,$40,$20,$10,$08,$04,$02,$01,$80,$40,$20,$10,$08,$04,$02,$01,$80,$40,$20,$10,$08,$04,$02,$01
 PlowLED dc.b $7F,$BF,$DF,$EF,$F7,$FB,$FD,$FE,$7F,$BF,$DF,$EF,$F7,$FB,$FD,$FE,$7F,$BF,$DF,$EF,$F7,$FB,$FD,$FE,$7F,$BF,$DF,$EF,$F7,$FB,$FD,$FE
@@ -79,7 +90,41 @@ seq dc.b %00001010,%00010010,%00010100,%00001100
 ; code section
 MyCode:     SECTION
 Entry:
-_Startup:
+_Startup:  
+           movb #00,keyflg
+           movb #' ',pestdisp
+           movb #'S',pestdisp+1
+           movb #'p',pestdisp+2
+           movb #'r',pestdisp+3
+           movb #'a',pestdisp+4
+           movb #'y',pestdisp+5
+           movb #'i',pestdisp+6
+           movb #'n',pestdisp+7
+           movb #'g',pestdisp+8
+           movb #' ',pestdisp+9
+           movb #'P',pestdisp+10
+           movb #'e',pestdisp+11
+           movb #'s',pestdisp+12
+           movb #'t',pestdisp+13
+           movb #' ',pestdisp+14
+           movb #' ',pestdisp+15
+           movb #' ',pestdisp+16
+           movb #' ',pestdisp+17
+           movb #' ',pestdisp+18
+           movb #' ',pestdisp+19
+           movb #' ',pestdisp+20
+           movb #'P',pestdisp+21
+           movb #'B',pestdisp+22
+           movb #' ',pestdisp+23
+           movb #'t',pestdisp+24
+           movb #'o',pestdisp+25
+           movb #' ',pestdisp+26
+           movb #'e',pestdisp+27
+           movb #'x',pestdisp+28
+           movb #'i',pestdisp+29
+           movb #'t',pestdisp+30
+           movb #'!',pestdisp+31
+           movb #0,pestdisp+32
 		   movb #'(',fertctrldisp
            movb #'A',fertctrldisp+1
            movb #')',fertctrldisp+2
@@ -147,6 +192,7 @@ _Startup:
            movb #'%',wtrctrldisp+31
            movb #0,wtrctrldisp+32    ;string terminator, acts like '\0'
            cli
+           movb #00,cropstats
            movb #$00,STPcnt
            MOVB #%00011110,p_DDR
            movb #6,fertDC
@@ -206,21 +252,22 @@ _Startup:
  	jsr init_LCD
     ldd #welcome
 	jsr display_string
-	ldy #5
+	ldaa #5
     ldx #ledpat
 nextpat:
     ldab 1,X+
     stab port_s
-    ldaa #100
 setup:
-    jsr delay    
+    ldy gametime
+    cpy #1000
+    blt setup
+    movw #00,gametime
     deca
-    bne setup
-    dey
     bne nextpat 
     ;jingle goes here
         
     ;Display Main Menu
+    movb #$40,INTCR
     ldd #mainmenu
     jsr display_string
 
@@ -255,7 +302,11 @@ scanSW:
     cmpa #$FF
     beq rst
     staa port_u
-    jsr delay
+hold1:
+    brset keyflg,#$FF,hold1
+hold2:
+    brclr keyflg,#$FF,hold2
+    ;jsr delay
     ldaa port_u
     ldab port_u
     anda #%00001111
@@ -286,14 +337,19 @@ top:
 		cmpb 1,X+  ;checks to see if val is equal to first value in table
 		beq match ;if there is a match move to load the index into a
 		inca ;checks to see if the table has been cycled through
-		bne top ;if it is not equal then return to the start
-check:     
-        jsr delay
+		bne top ;if it is not equal then return to the start     
+match:
+        psha	
+hold11:
+        brset keyflg,#$FF,hold11
+hold21:
+        brclr keyflg,#$FF,hold21
         ldaa port_u
         anda #$0F
         cmpa #$0F
-        bne check
-match:	rts
+        bne hold11
+        pula
+        rts
 
 delay:
       pshy
@@ -308,11 +364,25 @@ loop: dey
 
 
 RTI_ISR:
+        ldaa gamestate
+        bne setupdone
+        ldd gametime
+        addd #1
+        std gametime
+setupdone:        
+        ldaa keyflg
+        eora #$FF
+        staa keyflg
+        ldaa rtiCtrl
+        bita #%00100000
+        bne pestLED
+STPtst:
         ldaa rtiCtrl
         bita #%00011100
         beq DCtst
         jsr STPmtr
 DCtst:
+        ldaa rtiCtrl
         bita #%00000001
         beq timing
         jsr DCmtr
@@ -351,7 +421,16 @@ drawscreenDL:
         dex
         stx drawDL
         bra postDelay
-
+pestLED:
+        ldd timer
+        cpd #500
+        beq active
+        bra STPtst
+active:
+        ldaa port_s
+        eora #$FF
+        staa port_s
+        bra STPtst
 DCmtr:
         jsr dcLED
         ldaa Counter
@@ -491,5 +570,4 @@ fert1:
       ldaa 1,X
       staa port_s
       rts      
-      
-      
+
