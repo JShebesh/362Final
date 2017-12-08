@@ -23,7 +23,7 @@ fert:
 	  staa tON
 	  ;movb #08,tON
 	  bset rtiCtrl,#%10000001
-	  movw #2000,drawDL
+	  movw #20000,drawDL
 	  ldd #fertscreen
     jsr drawscreen
     bclr port_t,#%00001000
@@ -38,7 +38,7 @@ wtr:
     staa tON
    	;movb #32,tON
    	bset rtiCtrl,#%00000001
-   	movw #2000,drawDL
+   	movw #20000,drawDL
     ldd #wtrscreen
    	jsr drawscreen
     bclr rtiCtrl,#%10000001

@@ -338,7 +338,6 @@ _Startup:
            movb #0,harvests
            movb #0,fertwtr
     movb #%0010000,t_DDR
-    movb #$00,Counter
     movb #$80,CRGINT
     movb #$10,RTICTL
     movb #$00,gamestate
@@ -367,7 +366,7 @@ nextpat:
     stab port_s
 setup:
     ldy gametime
-    cpy #1000
+    cpy #10000
     blt setup
     movw #00,gametime
     deca
@@ -579,10 +578,10 @@ STPmtr:
        
        
 harvester:
-       ldab Counter
+       ldd Counter
        incb
-       stab Counter
-       cmpb #30
+       std Counter
+       cpd #300
        bne endSTP
        movb #00,Counter
        ldab STPcnt
@@ -599,10 +598,10 @@ rstcnt1:
        rts
        
 seeder:
-       ldab Counter
+       ldd Counter
        incb
-       stab Counter
-       cmpb #30
+       std Counter
+       cpd #300
        bne endSTP
        movb #00,Counter
        ldab STPcnt
@@ -623,7 +622,7 @@ chisel:
        ldab Counter
        incb
        stab Counter
-       cmpb #10
+       cmpb #100
        bne endSTP
        movb #00,Counter
        ldab STPcnt
@@ -657,7 +656,7 @@ Pattern:
       
 ;water LEDS 
       xgdx
-      ldx #2
+      ldx #200
       idiv
       cpd #00
       bne wtr1
@@ -674,7 +673,7 @@ wtr1:
 
 fert0:
       xgdx
-      ldx #2
+      ldx #200
       idiv
       cpd #00
       bne fert1

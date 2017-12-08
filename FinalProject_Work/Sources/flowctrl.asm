@@ -33,7 +33,7 @@ notwatered:
     jsr drawscreen
 wtrlp:
 	ldd #wtrctrldisp
-	movw #250,drawDL
+	movw #2500,drawDL
 	std lastscreen
 	jsr drawscreen
 	ldaa port_t
@@ -123,7 +123,7 @@ notfert:
 fertlp:
 	ldd #fertctrldisp
 	std lastscreen
-	movw #250,drawDL
+	movw #2500,drawDL
 	jsr drawscreen
 	ldaa port_t
     cmpa #%00000010

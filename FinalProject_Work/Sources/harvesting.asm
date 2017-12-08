@@ -11,7 +11,7 @@ hv1:
      ldaa #32
      staa 1,X+
      ldd #disp
-     movw #250,drawDL
+     movw #2500,drawDL
      jsr drawscreen
      dey
      bne hv1

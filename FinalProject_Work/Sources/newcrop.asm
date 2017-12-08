@@ -21,7 +21,7 @@ plant:
 	 ldaa gamestate
 	 cmpa #$01
 	 lbne error2
-	 movw #250,drawDL
+	 movw #2500,drawDL
 	 movb #$02,gamestate
    ldaa #32
    ldx #Seedsound
@@ -40,7 +40,7 @@ pl2:
      staa 1,X+
      ldd #disp
      jsr drawscreen
-     movw #250,drawDL
+     movw #2500,drawDL
      pula
      deca
      psha
@@ -61,7 +61,7 @@ space:
      ldaa #32
      staa 1,X+
      ldd #disp
-     movw #250,drawDL
+     movw #2500,drawDL
      jsr drawscreen
      pula
      deca
@@ -71,16 +71,16 @@ space:
      ldaa #32
      staa 1,X+
      ldd #disp
-     movw #250,drawDL
+     movw #2500,drawDL
      jsr drawscreen
      pula
      deca
      psha
-     movw #250,drawDL
+     movw #2500,drawDL
      bra pl2    
     
 plow:
-     movw #250,drawDL
+     movw #2500,drawDL
      ldaa #32
      ldx #Fertilizesound
      stx loc
@@ -95,7 +95,7 @@ pl1:
      staa 1,X+
      ldd #disp
      jsr drawscreen
-     movw #250,drawDL
+     movw #2500,drawDL
      pula
      deca
      psha
@@ -118,7 +118,7 @@ space2:
      ldaa #32
      staa 1,X+
      ldd #disp
-     movw #250,drawDL
+     movw #2500,drawDL
      jsr drawscreen
      pula
      deca
@@ -128,12 +128,12 @@ space2:
      ldaa #32
      staa 1,X+
      ldd #disp
-     movw #250,drawDL
+     movw #2500,drawDL
      jsr drawscreen
      pula
      deca
      psha
-     movw #250,drawDL
+     movw #2500,drawDL
      bra pl1    
 error1:
     ldd #err2
