@@ -1,5 +1,5 @@
   XDEF harvesting
-  XREF gamestate,wtrctrldisp,fertctrldisp,disp,seconds,timer,rtiCtrl,drawscreen,drawDL,harv
+  XREF gamestate,harvests,wtrctrldisp,fertctrldisp,disp,seconds,timer,rtiCtrl,drawscreen,drawDL,harv
 
 harvesting:
      ldd #harv
@@ -27,6 +27,7 @@ hv1:
      movb #'5',wtrctrldisp+29
      movb #'0',wtrctrldisp+30
      movb #'%',wtrctrldisp+31
+     inc harvests
      rts
      
     

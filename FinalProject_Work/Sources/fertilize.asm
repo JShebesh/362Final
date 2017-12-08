@@ -1,5 +1,5 @@
     XDEF fertilize
-    XREF gamestate,port_s,cropstats,fertDC,menuNum,wtrDC,drawDL,rtiCtrl,port_t,tON,fertscreen,wtrscreen,display_string,Keyboard,err1,sub1,drawscreen
+    XREF gamestate,fertwtr,port_s,cropstats,fertDC,menuNum,wtrDC,drawDL,rtiCtrl,port_t,tON,fertscreen,wtrscreen,display_string,Keyboard,err1,sub1,drawscreen
 		
 fertilize:
     movb #01,menuNum
@@ -30,6 +30,7 @@ fert:
     bclr rtiCtrl,#%10000001
     bset cropstats,#%00000001
     movb #$00,port_s
+    inc fertwtr
     rts
 
 wtr:
@@ -44,6 +45,7 @@ wtr:
    	bclr port_t,#%00001000
    	bset cropstats,#%00000010
    	movb #$00,port_s
+   	inc fertwtr
     rts
     
 error:

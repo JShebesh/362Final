@@ -1,9 +1,10 @@
     XDEF drawscreen
-    XREF display_string,drawDL,rtiCtrl
+    XREF display_string,drawDL,rtiCtrl,lastscreen
  
 drawscreen:
     pshy
     pshx
+    std lastscreen
     jsr display_string
     bset rtiCtrl,#%00000010
 RTILP:
