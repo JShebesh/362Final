@@ -10,12 +10,12 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Entry,temp,scoredisp,fertwtr,pests,harvests,IRQ_ISR,lastscreen,pesterr,pestdisp,ferterr,wtrerr,wtrdisp,fertdisp,menuNum,cropstats,exitflg,wtrctrldisp,fertctrldisp,SWstatus,start,port_p,sub1,sub2,mainmenu,harv,harvesting,tth,tth2,timer,seconds,STPcnt,PlantLED,wtrDC,fertDC,drawDL,rtiCtrl,port_t,RTI_ISR,CRGFLG,tON,fertscreen, wtrscreen, _Startup,port_s, err3,PlowLED, gamestate,Keyboard,err1,err2,sub2,sub1,disp,port_t
+            XDEF Entry,pestctrl,Harvestsound,Plowsound,Seedsound,Alarm,Fertilizesound,Sprinklersound,loc,timer2,Counter2,temp,pstdtct,scoredisp,fertwtr,pests,harvests,IRQ_ISR,lastscreen,pesterr,pestdisp,ferterr,wtrerr,wtrdisp,fertdisp,menuNum,cropstats,exitflg,wtrctrldisp,fertctrldisp,SWstatus,start,port_p,sub1,sub2,mainmenu,harv,harvesting,tth,tth2,timer,seconds,STPcnt,PlantLED,wtrDC,fertDC,drawDL,rtiCtrl,port_t,RTI_ISR,CRGFLG,tON,fertscreen, wtrscreen, _Startup,port_s, err3,PlowLED, gamestate,Keyboard,err1,err2,sub2,sub1,disp,port_t
             ; we use export 'Entry' as symbol. This allows us to
             ; reference 'Entry' either in the linker .prm file
             ; or from C/C++ later on
 
-            XREF __SEG_END_SSTACK,statsmen,growth,flowctrl,harvesting,pushb,display_string,pot_value,read_pot,init_LCD,SendsChr,PlayTone,fertilize,newcrop,drawscreen      ; symbol defined by the linker for the end of the stack
+            XREF __SEG_END_SSTACK,statsmen,speaker,growth,flowctrl,pestdetect,harvesting,pushb,display_string,pot_value,read_pot,init_LCD,SendsChr,PlayTone,fertilize,newcrop,drawscreen      ; symbol defined by the linker for the end of the stack
             
             ; LCD References
 	         
@@ -27,6 +27,7 @@
 
 ; variable/data section
 my_variable: SECTION
+PestDC  ds.b 1
 disp:	ds.b 33
 menuNum: ds.b 1
 gamestate: ds.b 1
@@ -54,6 +55,10 @@ harvests ds.b 1
 pests ds.b 1
 fertwtr ds.b 1
 pestctrl ds.b 1
+pstdtct ds.b 1
+Counter2 ds.w 1
+loc ds.w 1
+timer2 ds.w 1
 my_constants: SECTION 
 harv dc.b       "   Harvesting                   ",0
 welcome dc.b    "    Welcome         Farmtek     ",0
@@ -90,12 +95,84 @@ table dc.b $eb,$77,$7b,$7d,$b7,$bb,$bd,$d7,$db,$dd,$e7,$ed,$7e,$be,$de,$ee
 port_p equ $258
 p_DDR equ $25A
 seq dc.b %00001010,%00010010,%00010100,%00001100
- 
+A3:		equ	37
+B3:		equ	33
+C3:		equ	63
+d3:		equ	56
+E3:		equ	50
+F3:		equ	47
+G3:		equ	42
+C4:		equ	31
+D4:		equ	28
+E4:		equ	25
+F4:		equ	24
+G4:		equ	21
+A4:		equ	19
+A5:		equ	9
+B5:		equ	8
+B4:		equ	17
+C5:		equ	16
+D5:		equ	14
+E5:		equ	12
+F5:		equ	11
+G5:		equ	10
+A3F:	equ	40
+B3F:	equ	35
+D3F:	equ	59
+E3F:	equ	53
+G3F:	equ	44
+A4F:	equ	20
+B4F:	equ	17
+D4F:	equ	30
+E4F:	equ	26
+G4F:	equ	22
+A5F:	equ	10
+B5F:	equ	9
+D5F:	equ	15
+E5F:	equ	13
+G5F:	equ	11
+B6:	equ	4
+Arr	dc.b 	E5,E5,255,E5,E5,255,255,E5,E5,255,255,C5,C5,E5,E5,255,255
+	dc.b	G5,G5,255,255,255,255,255,255,G4,G4,255,255,255,255,255,255
+	dc.b	C5,C5,255,255,255,255,G4,G4,255,255,255,255,E4,E4,E4,E4
+	dc.b	255,A4,A4,A4,A4,255,B4,B4,B4,255,B4F,B4F,A4,A4,00 
+
+Alarm	dc.b	E5,E5,E5,E5,255,255,E5,E5,E5,E5,255,255
+		dc.b	E5,E5,E5,E5,255,255,E5,E5,E5,E5,255,255
+		dc.b	E5,E5,E5,E5,255,255,E5,E5,E5,E5,255,255
+		dc.b	E5,E5,E5,E5,255,255,E5,E5,E5,E5,255,255,00
+
+Plowsound: 
+	dc.b B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4
+	dc.b B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4
+	dc.b B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,00
+			
+
+Seedsound:		dc.b B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255
+				dc.b B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255 
+				dc.b B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,00
+
+Harvestsound:	dc.b G4,G4,G4,G4,G4,G4,G4,G4,G4,G4,G4,G4,D4,D4,D4,D4,E4,E4,E4,E4,C4,C4,C4,C4,C4,C4,C4,C4
+				dc.b D4,D4,D4,D4,D4,D4,D4,D4,B4,B4,B4,B4,B4,B4,B4,B4,A4,A4,A4,A4,A4,A4,A4,A4,G4,G4,G4,G4,G4,G4,G4,G4,G4,G4,G4,G4,D4,D4,D4,D4,00
+					 
+
+Fertilizesound: 	dc.b C4,D4,E4,F4,G4,A4,B4,255,B4,A4,F4,E4,D4,C4 
+					dc.b C4,D4,E4,F4,G4,A4,B4,255,B4,A4,F4,E4,D4,C4
+					dc.b C4,D4,E4,F4,G4,A4,B4,255,B4,A4,F4,E4,D4,C4
+					dc.b C4,D4,E4,F4,G4,A4,B4,255,B4,A4,F4,E4,D4,C4,00
+
+Sprinklersound: 	dc.b G3,255,G3,255,G3,255,255,G3,G3,G3,G3,255,255,G3,255,G3 
+					dc.b G3,255,G3,255,G3,255,255,G3,G3,G3,G3,255,255,G3,255,G3
+					dc.b G3,255,G3,255,G3,255,255,G3,G3,G3,G3,255,255,G3,255,G3
+					dc.b G3,255,G3,255,G3,255,255,G3,G3,G3,G3,255,255,G3,255,G3,00
 
 ; code section
+
 MyCode:     SECTION
 Entry:
-_Startup:  
+_Startup: 
+		   movw #0000,Counter2
+		   movb #00,pstdtct 
 		   movb #$00,pestctrl
 		   movb #'H',scoredisp
            movb #'a',scoredisp+1
@@ -270,7 +347,6 @@ _Startup:
            movb #' ',disp+30
            movb #' ',disp+31
            movb #0,disp+32    ;string terminator, acts like '\0'
-           movb #$00,Counter
            movw #0000,timer
            movw #0000,seconds
            movb #5,tON
@@ -278,11 +354,14 @@ _Startup:
            movb #0,pests
            movb #0,harvests
            movb #0,fertwtr
+           movw #0,loc
+           movw #0000,timer2
     movb #$00,Counter
     movb #$80,CRGINT
-    movb #$40,RTICTL
+    movb #$10,RTICTL
     movb #$00,gamestate
     bset t_DDR,#%00101000
+    bset port_t,#%00100000
     movb #$F0,$26A
     movb #$F0,$26D
     movb #$0F,$26C
@@ -295,6 +374,9 @@ _Startup:
     std lastscreen
 	jsr display_string
 	cli
+	ldx #Arr
+	stx loc
+	bset rtiCtrl,#%01000000
 	ldaa #5
     ldx #ledpat
 nextpat:
@@ -302,7 +384,7 @@ nextpat:
     stab port_s
 setup:
     ldy gametime
-    cpy #1000
+    cpy #10000
     blt setup
     movw #00,gametime
     deca
@@ -338,6 +420,7 @@ nxt:
 
 Keyboard:
 rst:    ldx #Kseq
+		brset pstdtct,#%00000001,PST
 		brset port_t,#%00000001,SW
 		brset port_t,#%00000010,SW
 scan:
@@ -353,7 +436,6 @@ hold1:
     brset keyflg,#$FF,hold1
 hold2:
     brclr keyflg,#$FF,hold2
-    ;jsr delay
     ldaa port_u
     ldab port_u
     anda #%00001111
@@ -369,7 +451,9 @@ SW:
 	beq scan
 	jsr flowctrl
 	bra scan
-
+PST:
+	jsr pestdetect
+	bra scan
 swcheck:
 	ldaa port_t
 	anda #%00000011
@@ -398,20 +482,20 @@ hold21:
         pula
         rts
 
-delay:
-      pshy
-      ldy #30000
-loop: dey
-      bne loop
-      puly
-      rts
-
 
 
 
 
 RTI_ISR:
-        ldaa gamestate
+		ldaa rtiCtrl
+        bita #%01000000
+        beq Nomusic
+        ldd timer2
+        addd #1
+        std timer2
+        jsr speaker
+Nomusic:
+	    ldaa gamestate
         bne setupdone
         ldd gametime
         addd #1
@@ -420,9 +504,6 @@ setupdone:
         ldaa keyflg
         eora #$FF
         staa keyflg
-        ldaa rtiCtrl
-        bita #%00100000
-        bne pestLED
 STPtst:
         ldaa rtiCtrl
         bita #%00011100
@@ -442,21 +523,13 @@ postDelay:
         cmpa #2
         blt endrti
         ldd timer
-        clc
-        incb
-        bne nocarry1
-        inca
-nocarry1:
+      	addd #1
         std timer        
-        cpd #$03E9
+        cpd #$2710
         bne  endrti
         movw #$0000,timer
         ldd seconds
-        clc
-        incb
-        bne nocarry2
-        inca
-nocarry2: 
+		addd #1
         std seconds
         jsr growth
 endrti:
@@ -468,18 +541,13 @@ drawscreenDL:
         dex
         stx drawDL
         bra postDelay
-pestLED:
-        ldd timer
-        cpd #500
-        beq active
-        bra STPtst
-active:
-        ldaa port_s
-        eora #$FF
-        staa port_s
-        bra STPtst
+
 DCmtr:
+		ldaa rtiCtrl
+		bita #%00100000
+		bne pstDC
         jsr dcLED
+pstDC:
         ldaa Counter
         inca
         staa Counter
@@ -509,12 +577,12 @@ STPmtr:
        
        
 harvester:
-       ldab Counter
-       incb
-       stab Counter
-       cmpb #30
+       ldd Counter2
+       addd #1
+       std Counter2
+       cpd #150
        bne endSTP
-       movb #00,Counter
+       movw #00,Counter2
        ldab STPcnt
        ldx #seq
        abx
@@ -529,12 +597,12 @@ rstcnt1:
        rts
        
 seeder:
-       ldab Counter
-       incb
-       stab Counter
-       cmpb #30
+       ldd Counter2
+       addd #1
+       std Counter2
+       cpd #150
        bne endSTP
-       movb #00,Counter
+       movw #00,Counter2
        ldab STPcnt
        ldx #seq
        abx
@@ -550,12 +618,12 @@ rstcnt2:
        rts
 
 chisel:
-       ldab Counter
-       incb
-       stab Counter
-       cmpb #10
+       ldd Counter2
+       addd #1
+       std Counter2
+       cmpb #50
        bne endSTP
-       movb #00,Counter
+       movw #00,Counter2
        ldab STPcnt
        ldx #seq
        abx
@@ -575,7 +643,7 @@ endSTP:
 
 dcLED:
       ldd timer
-      ldx #100
+      ldx #1000
       idiv
       cpd #00
       beq Pattern
@@ -621,62 +689,6 @@ fert1:
 
 
 IRQ_ISR:
-		inc pests
-		ldaa #$FF
-		staa port_s       
-read:
-		ldaa pestctrl
-		eora #%00001000
-		staa port_t
-        jsr read_pot
-        tfr a,b
-        clra
-        ldx #25
-        idiv
-        xgdx
-        cpd #10
-        beq max
-        addb #48
-        stab pestdisp+16
-        movb #'0',pestdisp+17
-        movb #'%',pestdisp+18
-        ldd #pestdisp
-        jsr display_string
-        ldaa port_s
-        eora #$FF
-        staa port_s
-        brclr port_p,#%00100000,endpest
-        bra read
-max:
-        movb #'M',pestdisp+16
-        movb #'A',pestdisp+17
-        movb #'X',pestdisp+18
-        ldd #pestdisp
-        jsr display_string
-        bra read
-        
-endpest:
-	brclr port_p,#%00100000,endpest
-	bclr port_t,#%00001000
-	bclr port_s,#$FF
-	ldd lastscreen
-	jsr display_string
-	rti
-   ; ldaa menuNum
-   ; beq mainMen1
-   ; cmpa #2
-   ; blt fertMen2
-   ; ldd #sub2
-   ; jsr display_string
-    ;rti
-    
-;mainMen1:
-    ;ldd #mainmenu
-    ;jsr display_string
-    ;rti
-    
-;fertMen2:
-    ;ldd #sub1
-   ; jsr display_string
-    ;rti
+		movb #1,pstdtct
+		rti
      

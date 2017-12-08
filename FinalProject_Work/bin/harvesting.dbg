@@ -1,17 +1,19 @@
   XDEF harvesting
-  XREF gamestate,harvests,wtrctrldisp,fertctrldisp,disp,seconds,timer,rtiCtrl,drawscreen,drawDL,harv
+  XREF gamestate,loc,Harvestsound,Counter2,harvests,wtrctrldisp,fertctrldisp,disp,seconds,timer,rtiCtrl,drawscreen,drawDL,harv
 
 harvesting:
+     ldx #Harvestsound
+     stx loc
      ldd #harv
      jsr drawscreen
      ldy #32
      ldx #disp
-     bset rtiCtrl,#%00010000
+     bset rtiCtrl,#%01010000
 hv1:
      ldaa #32
      staa 1,X+
      ldd #disp
-     movw #250,drawDL
+     movw #2500,drawDL
      jsr drawscreen
      dey
      bne hv1
@@ -20,6 +22,7 @@ hv1:
      movw #$00,timer
      movw #$00,seconds
      movb #$00,rtiCtrl
+     movw #$00,Counter2
      movb #'1',fertctrldisp+29
      movb #'0',fertctrldisp+30
      movb #'%',fertctrldisp+31

@@ -25,7 +25,7 @@ statsmen:
 	xgdx
 	stab scoredisp+31
 	ldd #scoredisp
-	movw #3000,drawDL
+	movw #30000,drawDL
 	jsr drawscreen
 	rts
 	

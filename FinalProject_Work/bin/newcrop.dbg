@@ -1,5 +1,5 @@
     XDEF newcrop
-    XREF gamestate,cropstats,menuNum,rtiCtrl,STPcnt,PlantLED,PlowLED,drawDL,port_s,display_string,Keyboard,err2,err3,sub2,drawscreen,disp,__SEG_END_SSTACK
+    XREF gamestate,Plowsound,Seedsound,loc,Counter2,cropstats,menuNum,rtiCtrl,STPcnt,PlantLED,PlowLED,drawDL,port_s,display_string,Keyboard,err2,err3,sub2,drawscreen,disp,__SEG_END_SSTACK
 		
 newcrop:
     movb #02,menuNum
@@ -21,13 +21,15 @@ plant:
 	 ldaa gamestate
 	 cmpa #$01
 	 lbne error2
-	 movw #250,drawDL
+	 movw #500,drawDL
 	 movb #$02,gamestate
    ldaa #32
+   ldx #Seedsound
+   stx loc
    ldy #PlantLED
    ldx #disp
    movb #00,STPcnt
-   bset rtiCtrl,#%00001000
+   bset rtiCtrl,#%01001000
    bset cropstats,#%00000100
    psha
      
@@ -38,7 +40,7 @@ pl2:
      staa 1,X+
      ldd #disp
      jsr drawscreen
-     movw #250,drawDL
+     movw #500,drawDL
      pula
      deca
      psha
@@ -50,8 +52,9 @@ pl2:
      bra pl2
 endplant1:
      pula
-     bclr rtiCtrl,#%00001000
+     bclr rtiCtrl,#%01001000
      bclr port_s,$FF
+     movw #$00,Counter2
      rts  
 space:
      ldab 1,Y+
@@ -59,7 +62,7 @@ space:
      ldaa #32
      staa 1,X+
      ldd #disp
-     movw #250,drawDL
+     movw #500,drawDL
      jsr drawscreen
      pula
      deca
@@ -69,20 +72,22 @@ space:
      ldaa #32
      staa 1,X+
      ldd #disp
-     movw #250,drawDL
+     movw #500,drawDL
      jsr drawscreen
      pula
      deca
      psha
-     movw #250,drawDL
+   	 movw #500,drawDL
      bra pl2    
     
 plow:
-     movw #250,drawDL
+     movw #500,drawDL
      ldaa #32
+     ldx #Plowsound
+     stx loc
      ldx #disp
      ldy #PlowLED
-     bset rtiCtrl,#%00000100
+     bset rtiCtrl,#%01000100
      psha
 pl1: 
      ldab 1,Y+
@@ -91,7 +96,7 @@ pl1:
      staa 1,X+
      ldd #disp
      jsr drawscreen
-     movw #250,drawDL
+     movw #500,drawDL
      pula
      deca
      psha
@@ -104,9 +109,10 @@ pl1:
      
 endplow2:
      pula     
-     bclr rtiCtrl,#%00000100
+     bclr rtiCtrl,#%01000100
      bclr port_s,$FF
      movb #$01,gamestate
+     movw #$00,Counter2
      lbra klp
 space2:
      ldab 1,Y+
@@ -114,7 +120,7 @@ space2:
      ldaa #32
      staa 1,X+
      ldd #disp
-     movw #250,drawDL
+     movw #500,drawDL
      jsr drawscreen
      pula
      deca
@@ -124,12 +130,12 @@ space2:
      ldaa #32
      staa 1,X+
      ldd #disp
-     movw #250,drawDL
+     movw #500,drawDL
      jsr drawscreen
      pula
      deca
      psha
-     movw #250,drawDL
+     movw #500,drawDL
      bra pl1    
 error1:
     ldd #err2

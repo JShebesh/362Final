@@ -33,19 +33,18 @@ notwatered:
     jsr drawscreen
 wtrlp:
 	ldd #wtrctrldisp
-	movw #250,drawDL
+	movw #2500,drawDL
 	std lastscreen
 	jsr drawscreen
 	ldaa port_t
-    cmpa #%00000001
-    lbne endflow
+    bita #%00000001
+    lbeq endflow
 	jsr Keyboard
 	cmpa #10
 	beq increase
 	cmpa #11
 	beq decrease
 	ldaa port_t
-	;brclr port_t,#%00000011,endflow
 	bra wtrlp
 	
 increase:
@@ -123,11 +122,11 @@ notfert:
 fertlp:
 	ldd #fertctrldisp
 	std lastscreen
-	movw #250,drawDL
+	movw #2500,drawDL
 	jsr drawscreen
 	ldaa port_t
-    cmpa #%00000010
-    lbne endflow
+    bita #%00000010
+    lbeq endflow
 	jsr Keyboard
 	cmpa #10
 	beq increase1
