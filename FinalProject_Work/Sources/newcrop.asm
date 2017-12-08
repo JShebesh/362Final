@@ -1,5 +1,5 @@
     XDEF newcrop
-    XREF gamestate,cropstats,menuNum,rtiCtrl,STPcnt,PlantLED,PlowLED,drawDL,port_s,display_string,Keyboard,err2,err3,sub2,drawscreen,disp,__SEG_END_SSTACK
+    XREF gamestate,Seedsound,Fertilizesound,loc,cropstats,menuNum,rtiCtrl,STPcnt,PlantLED,PlowLED,drawDL,port_s,display_string,Keyboard,err2,err3,sub2,drawscreen,disp,__SEG_END_SSTACK
 		
 newcrop:
     movb #02,menuNum
@@ -24,10 +24,12 @@ plant:
 	 movw #250,drawDL
 	 movb #$02,gamestate
    ldaa #32
+   ldx #Seedsound
+   stx loc
    ldy #PlantLED
    ldx #disp
    movb #00,STPcnt
-   bset rtiCtrl,#%00001000
+   bset rtiCtrl,#%01001000
    bset cropstats,#%00000100
    psha
      
@@ -80,9 +82,11 @@ space:
 plow:
      movw #250,drawDL
      ldaa #32
+     ldx #Fertilizesound
+     stx loc
      ldx #disp
      ldy #PlowLED
-     bset rtiCtrl,#%00000100
+     bset rtiCtrl,#%01000100
      psha
 pl1: 
      ldab 1,Y+

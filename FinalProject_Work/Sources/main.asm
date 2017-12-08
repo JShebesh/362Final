@@ -10,7 +10,7 @@
             INCLUDE 'derivative.inc'
 
 ; export symbols
-            XDEF Entry,temp,scoredisp,fertwtr,pests,harvests,IRQ_ISR,lastscreen,pesterr,pestdisp,ferterr,wtrerr,wtrdisp,fertdisp,menuNum,cropstats,exitflg,wtrctrldisp,fertctrldisp,SWstatus,start,port_p,sub1,sub2,mainmenu,harv,harvesting,tth,tth2,timer,seconds,STPcnt,PlantLED,wtrDC,fertDC,drawDL,rtiCtrl,port_t,RTI_ISR,CRGFLG,tON,fertscreen, wtrscreen, _Startup,port_s, err3,PlowLED, gamestate,Keyboard,err1,err2,sub2,sub1,disp,port_t
+            XDEF Entry,loc,temp,Seedsound,Fertilizesound,scoredisp,fertwtr,pests,harvests,IRQ_ISR,lastscreen,pesterr,pestdisp,ferterr,wtrerr,wtrdisp,fertdisp,menuNum,cropstats,exitflg,wtrctrldisp,fertctrldisp,SWstatus,start,port_p,sub1,sub2,mainmenu,harv,harvesting,tth,tth2,timer,seconds,STPcnt,PlantLED,wtrDC,fertDC,drawDL,rtiCtrl,port_t,RTI_ISR,CRGFLG,tON,fertscreen, wtrscreen, _Startup,port_s, err3,PlowLED, gamestate,Keyboard,err1,err2,sub2,sub1,disp,port_t
             ; we use export 'Entry' as symbol. This allows us to
             ; reference 'Entry' either in the linker .prm file
             ; or from C/C++ later on
@@ -27,6 +27,7 @@
 
 ; variable/data section
 my_variable: SECTION
+loc:	ds.w 1
 disp:	ds.b 33
 menuNum: ds.b 1
 gamestate: ds.b 1
@@ -85,17 +86,75 @@ PSR_u equ $24D
 PUDE equ $24C
 port_t equ $240
 t_DDR equ $242
+A3:		equ	37
+B3:		equ	33
+C3:		equ	63
+d3:		equ	56
+E3:		equ	50
+F3:		equ	47
+G3:		equ	42
+C4:		equ	31
+D4:		equ	28
+E4:		equ	25
+F4:		equ	24
+G4:		equ	21
+A4:		equ	19
+A5:		equ	9
+B5:		equ	8
+B4:		equ	17
+C5:		equ	16
+D5:		equ	14
+E5:		equ	12
+F5:		equ	11
+G5:		equ	10
+A3F:	equ	40
+B3F:	equ	35
+D3F:	equ	59
+E3F:	equ	53
+G3F:	equ	44
+A4F:	equ	20
+B4F:	equ	17
+D4F:	equ	30
+E4F:	equ	26
+G4F:	equ	22
+A5F:	equ	10
+B5F:	equ	9
+D5F:	equ	15
+E5F:	equ	13
+G5F:	equ	11
+B6:	equ	4
 Kseq dc.b $70,$B0,$D0,$E0,$FF
 table dc.b $eb,$77,$7b,$7d,$b7,$bb,$bd,$d7,$db,$dd,$e7,$ed,$7e,$be,$de,$ee
 port_p equ $258
 p_DDR equ $25A
 seq dc.b %00001010,%00010010,%00010100,%00001100
- 
+Arr	dc.b 	E5,E5,255,E5,E5,255,255,E5,E5,255,255,C5,C5,E5,E5,255,255
+	dc.b	G5,G5,255,255,255,255,255,255,G4,G4,255,255,255,255,255,255
+	dc.b	C5,C5,255,255,255,255,G4,G4,255,255,255,255,E4,E4,255,255
+	dc.b	255,255,A4,A4,255,255,B4,B4,255,255,B4F,B4F,A4,A4,00
+
+Alarm	dc.b	E5,E5,E5,E5,255,255,E5,E5,E5,E5,255,255
+	dc.b	E5,E5,E5,E5,255,255,E5,E5,E5,E5,255,255
+	dc.b	E5,E5,E5,E5,255,255,E5,E5,E5,E5,255,255
+	dc.b	E5,E5,E5,E5,255,255,E5,E5,E5,E5,255,255,00
+
+Plowsound: 	dc.b B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4
+		dc.b B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4
+		dc.b B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,B4,A4,G4,00
+
+Seedsound:		dc.b B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255
+		dc.b B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255 
+		dc.b B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,B6,255,255,00
+
+Fertilizesound: 	dc.b C4,D4,E4,F4,G4,A4,B4,255,B4,A4,F4,E4,D4,C4,00 
+
+Sprinklersound: 	dc.b G4,255,G4,255,G4,255,G4,G4,G4,255,255,G4,255,G4,00 
 
 ; code section
 MyCode:     SECTION
 Entry:
 _Startup:  
+		    
 		   movb #$00,pestctrl
 		   movb #'H',scoredisp
            movb #'a',scoredisp+1
@@ -278,9 +337,10 @@ _Startup:
            movb #0,pests
            movb #0,harvests
            movb #0,fertwtr
+    movb #%0010000,t_DDR
     movb #$00,Counter
     movb #$80,CRGINT
-    movb #$40,RTICTL
+    movb #$10,RTICTL
     movb #$00,gamestate
     bset t_DDR,#%00101000
     movb #$F0,$26A
@@ -288,12 +348,17 @@ _Startup:
     movb #$0F,$26C
     movb #$FF,s_DDR
     movb #00,exitflg
+    movw #$00,loc
     bclr port_s,#%11111111
  	LDS #__SEG_END_SSTACK
+ 	movb #%01000000,rtiCtrl
+ 	movb #%00100000,port_t
  	jsr init_LCD
     ldd #welcome
     std lastscreen
 	jsr display_string
+	ldx	#Arr	;store location of array full of notes
+ 	stx	loc	    ;use the location to shift through array
 	cli
 	ldaa #5
     ldx #ledpat
@@ -411,7 +476,12 @@ loop: dey
 
 
 RTI_ISR:
-        ldaa gamestate
+        ldaa rtiCtrl
+        bita #%01000000
+        beq Nomusic
+        jsr Playnotes
+Nomusic:        
+		ldaa gamestate
         bne setupdone
         ldd gametime
         addd #1
@@ -679,4 +749,37 @@ endpest:
     ;ldd #sub1
    ; jsr display_string
     ;rti
+    
+    
+    														   
+Playnotes:		
+    ldy		#26000 
+	ldx		loc
+	ldaa	0,x			;a has value of sound
+	cmpa	#255		;any rest value
+	beq		Rest
+	cmpa	#00			;end of array
+	beq		Reset  	
+	pshx
+	psha
+	jsr		SendsChr	;send character
+	pula
+	jsr		Note
+	pulx
+	inx					;increment the array counter
+	stx		loc			;store next location
+Leave:	
+	rts
+Reset:	
+	bclr	rtiCtrl,#%01000000
+	rts
+Note:
+	jsr	PlayTone	;send tone to speaker
+	dbne y,Note		;delay
+	rts
+Rest:
+	dbne	y,Rest	;delay until rest is over
+	inx				;increment array counter
+	stx	loc			;store next location
+	bra Leave
      
