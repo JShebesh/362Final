@@ -1,18 +1,17 @@
     XDEF drawscreen
-    XREF display_string,drawDL
+    XREF display_string,drawDL,rtiCtrl,lastscreen
  
 drawscreen:
     pshy
     pshx
+    std lastscreen
     jsr display_string
+    bset rtiCtrl,#%00000010
+RTILP:
     ldx drawDL
-lp2:
-    ldy #10000
-lp1:
-    dey
-    bne lp1
-    dex
-    bne lp2
+    bne RTILP
+    bclr rtiCtrl,#%00000010
+    movw #1000,drawDL
     pulx
     puly
     rts
