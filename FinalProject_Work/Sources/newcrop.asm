@@ -2,14 +2,14 @@
     XREF gamestate,Plowsound,Seedsound,loc,Counter2,cropstats,menuNum,rtiCtrl,STPcnt,PlantLED,PlowLED,drawDL,port_s,display_string,Keyboard,err2,err3,sub2,drawscreen,disp,__SEG_END_SSTACK
 		
 newcrop:
-    movb #02,menuNum
+    movb #02,menuNum   ;sets current menu
     ldab gamestate
-    cmpb #2
-    lbge error1  
+    cmpb #2          ;checks to see if crop is already planted
+    lbge error1      ;if crop is already planted display error
 klp:
-    ldd #sub2
+    ldd #sub2       ;displays the planting screen
     jsr display_string
-    jsr Keyboard
+    jsr Keyboard    ;checks keyboard input and selects proper action
     cmpa #10
     lbeq plow
     cmpa #11
@@ -18,7 +18,7 @@ klp:
     
     
 plant:
-	 ldaa gamestate
+	 ldaa gamestate ;set gamestate,delay,sound file,LED pattern,Reset stepper counter,and set ctrl flags
 	 cmpa #$01
 	 lbne error2
 	 movw #500,drawDL
@@ -30,44 +30,44 @@ plant:
    ldx #disp
    movb #00,STPcnt
    bset rtiCtrl,#%01001000
-   bset cropstats,#%00000100
+   bset cropstats,#%00000100    ;set crop status as planted
    psha
      
 pl2:
-     ldab 1,Y+
+     ldab 1,Y+     ;loads next led pattern and displays
      stab port_s    
      ldaa #46
      staa 1,X+
-     ldd #disp
+     ldd #disp     ;stores . in current space then redraws screen
      jsr drawscreen
      movw #500,drawDL
-     pula
+     pula          ;pulls counter increments and stores
      deca
      psha
-     beq endplant1
+     beq endplant1   ;checks to see if entire field is planted
      cmpa #9
-     beq space
+     beq space   ;if on space 9 or 25 branch to print spaces
      cmpa #25
      beq space
      bra pl2
 endplant1:
      pula
-     bclr rtiCtrl,#%01001000
+     bclr rtiCtrl,#%01001000   ;resets flags and LEDs
      bclr port_s,$FF
-     movw #$00,Counter2
+     movw #$00,Counter2   ;resets counter
      rts  
 space:
-     ldab 1,Y+
+     ldab 1,Y+    ;keeps displaying LED pattern
      stab port_s
-     ldaa #32
+     ldaa #32     ;prints space then display screen again
      staa 1,X+
      ldd #disp
      movw #500,drawDL
      jsr drawscreen
-     pula
+     pula         ;decrements counter
      deca
      psha
-     ldab 1,Y+
+     ldab 1,Y+    ;repeats
      stab port_s
      ldaa #32
      staa 1,X+
@@ -78,10 +78,10 @@ space:
      deca
      psha
    	 movw #500,drawDL
-     bra pl2    
+     bra pl2   ;return to printing .'s  
     
 plow:
-     movw #500,drawDL
+     movw #500,drawDL    ;sets delay, sounds file, display, LED pattern, and control flags
      ldaa #32
      ldx #Plowsound
      stx loc
@@ -90,20 +90,20 @@ plow:
      bset rtiCtrl,#%01000100
      psha
 pl1: 
-     ldab 1,Y+
+     ldab 1,Y+     ;loads next LED pattern and displays
      stab port_s    
-     ldaa #35
-     staa 1,X+
-     ldd #disp
+     ldaa #35      ;loads the # symbol
+     staa 1,X+     ;stores a # in the next space in the field display
+     ldd #disp     ;redraws field screen
      jsr drawscreen
      movw #500,drawDL
-     pula
-     deca
-     psha
-     beq endplow2
-     cmpa #9
+     pula    ;pulls counter off the stack
+     deca    ;decrements 
+     psha    ;pushes counter back on the stack
+     beq endplow2 ;if the counter has reached 0 end plowing
+     cmpa #9     ;if on space 9 print spaces 
      beq space2
-     cmpa #25
+     cmpa #25    ;if on space 25 print spaces
      beq space2
      bra pl1
      
@@ -115,7 +115,17 @@ endplow2:
      movw #$00,Counter2
      lbra klp
 space2:
-     ldab 1,Y+
+     ldab 1,Y+   ;keeps displaying LED pattern
+     stab port_s
+     ldaa #32
+     staa 1,X+    ;loads and stores space then redraws screen
+     ldd #disp
+     movw #500,drawDL
+     jsr drawscreen
+     pula
+     deca
+     psha
+     ldab 1,Y+    ;repeat for the next space
      stab port_s
      ldaa #32
      staa 1,X+
@@ -125,23 +135,13 @@ space2:
      pula
      deca
      psha
-     ldab 1,Y+
-     stab port_s
-     ldaa #32
-     staa 1,X+
-     ldd #disp
      movw #500,drawDL
-     jsr drawscreen
-     pula
-     deca
-     psha
-     movw #500,drawDL
-     bra pl1    
+     bra pl1         ;return to printing screen
 error1:
-    ldd #err2
+    ldd #err2        ;load and printer error then return
     jsr drawscreen
     rts
-error2:
+error2:          ;load and print error and return (not plowed)
 	ldd #err3
 	jsr drawscreen
 	jmp klp

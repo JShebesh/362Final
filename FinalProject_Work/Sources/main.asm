@@ -170,7 +170,9 @@ Sprinklersound: 	dc.b G3,255,G3,255,G3,255,255,G3,G3,G3,G3,255,255,G3,255,G3
 
 MyCode:     SECTION
 Entry:
-_Startup: 
+_Startup:
+;this section initilizes all variables as well as initilize the arrays that hold
+;the displays. 
 		   movw #0000,Counter2
 		   movb #00,pstdtct 
 		   movb #$00,pestctrl
@@ -369,21 +371,21 @@ _Startup:
     movb #00,exitflg
     bclr port_s,#%11111111
  	LDS #__SEG_END_SSTACK
- 	jsr init_LCD
-    ldd #welcome
-    std lastscreen
-	jsr display_string
-	cli
-	ldx #Arr
-	stx loc
-	bset rtiCtrl,#%01000000
-	ldaa #5
-    ldx #ledpat
+ 	jsr init_LCD ;initilizes LCD screen
+    ldd #welcome  ;loads the address of the welcome screen display array
+    std lastscreen ;stores address again so that we have reference to the last screen displayed
+	jsr display_string ;displays welcome screen
+	cli                ;enable RTI
+	ldx #Arr           ;loads address of music array
+	stx loc            ;stores address into current music location
+	bset rtiCtrl,#%01000000 ;sets control flag for music playing
+	ldaa #5 ;counter for 5 pattern LED display
+    ldx #ledpat  ;led patter array loaded
 nextpat:
-    ldab 1,X+
-    stab port_s
+    ldab 1,X+    ;loads next pattern
+    stab port_s  ;outputs pattern to LEDs
 setup:
-    ldy gametime
+    ldy gametime ;checks the gametime variable in RTI to delay 1 secs per loop
     cpy #10000
     blt setup
     movw #00,gametime
@@ -392,13 +394,14 @@ setup:
     ;jingle goes here
         
     ;Display Main Menu
-    movb #$40,INTCR
-    ldd #mainmenu
+    movb #$40,INTCR    ;initilized IRQ
+    ldd #mainmenu      ;draws main menu screen
     jsr drawscreen
 
 
 
-
+;this section of code scans the keyboard
+;then based on the selection will enter a new menu
 start:
      movb #00,menuNum
      jsr Keyboard
@@ -417,22 +420,22 @@ nxt:
      ldd #mainmenu
      jsr drawscreen
      bra start	
-
+;this is the keyboard scanning subroutine
 Keyboard:
 rst:    ldx #Kseq
-		brset pstdtct,#%00000001,PST
-		brset port_t,#%00000001,SW
+		brset pstdtct,#%00000001,PST ;jumps to seperate area if inside of pest IRQ
+		brset port_t,#%00000001,SW ;checks to see if switches are flipped then enters seperate menu
 		brset port_t,#%00000010,SW
 scan:
-    brclr port_p,#%00100000,PB
+    brclr port_p,#%00100000,PB ;checks if pushbutton is pressed
     ldaa exitflg
-    bne swcheck    
-scanSW:
+    bne swcheck   ;checks status of switches 
+scanSW:           ;this starts the typical keyboard subroutine
     ldaa 1,X+
     cmpa #$FF
     beq rst
     staa port_u
-hold1:
+hold1:                      ;waits for key to be released
     brset keyflg,#$FF,hold1
 hold2:
     brclr keyflg,#$FF,hold2
@@ -443,18 +446,18 @@ hold2:
     beq scan
     jsr Search
 end:rts        
-PB:
+PB:            ;if the PB is pressed goes to PB subroutine
     jsr pushb
     bra scan
 SW:
-	ldaa SWstatus
+	ldaa SWstatus  ;if switches are set go to flowctrl subroutine
 	beq scan
 	jsr flowctrl
 	bra scan
-PST:
+PST:             ;if pest detect flag is set go to subroutine
 	jsr pestdetect
 	bra scan
-swcheck:
+swcheck:          ;checks to see if switches are still set
 	ldaa port_t
 	anda #%00000011
 	beq exitSW
@@ -470,7 +473,7 @@ top:
 		inca ;checks to see if the table has been cycled through
 		bne top ;if it is not equal then return to the start     
 match:
-        psha	
+        psha	;saves value of a while waiting for key release
 hold11:
         brset keyflg,#$FF,hold11
 hold21:
@@ -482,81 +485,81 @@ hold21:
         pula
         rts
 
-
+;real time interupt control
 
 
 
 RTI_ISR:
-		ldaa rtiCtrl
-        bita #%01000000
+		ldaa rtiCtrl     ;loads RTI flag variable
+        bita #%01000000  ;checks for music flag
         beq Nomusic
-        ldd timer2
-        addd #1
+        ldd timer2       ;if the flag is set increment timer
+        addd #1          ;then jump to speaker subroutine
         std timer2
         jsr speaker
 Nomusic:
-	    ldaa gamestate
+	    ldaa gamestate    ;checks gamestate to see if setup is finished
         bne setupdone
-        ldd gametime
-        addd #1
+        ldd gametime    ;if setup is still continuing 
+        addd #1         ;increment gametime counter
         std gametime
-setupdone:        
+setupdone:              ;varies keyflag to control keyboard timing
         ldaa keyflg
         eora #$FF
         staa keyflg
 STPtst:
-        ldaa rtiCtrl
-        bita #%00011100
+        ldaa rtiCtrl   ;reload control flags
+        bita #%00011100 ;if plow,planter,harvester flag set go to stepper motor subroutine
         beq DCtst
         jsr STPmtr
 DCtst:
-        ldaa rtiCtrl
+        ldaa rtiCtrl    ;check to see if DC motor flag is set
         bita #%00000001
         beq timing
-        jsr DCmtr
+        jsr DCmtr       ;if flags set jump to DC motor routine
 timing:
-        ldaa rtiCtrl
+        ldaa rtiCtrl    ;checks to see if screen is being drawn and delays appropriately
         bita #%00000010
         bne drawscreenDL
-postDelay:
+postDelay:              ;checks to see if crop is planted if not exit rti
         ldaa gamestate
         cmpa #2
         blt endrti
-        ldd timer
+        ldd timer       ;if crop is planted increment game timer
       	addd #1
         std timer        
-        cpd #$2710
+        cpd #$2710      ;if timer reaches 10000 then increment seconds counter by 1
         bne  endrti
         movw #$0000,timer
         ldd seconds
 		addd #1
         std seconds
-        jsr growth
+        jsr growth     ;jump to growth routine to see if crop grows
 endrti:
         movb #$80,CRGFLG
         RTI
 	
-drawscreenDL:
+drawscreenDL:        ;handles delay for Drawscreen
         ldx drawDL
         dex
         stx drawDL
         bra postDelay
 
 DCmtr:
-		ldaa rtiCtrl
+		ldaa rtiCtrl     ;checks to see if pest detection is running
 		bita #%00100000
 		bne pstDC
-        jsr dcLED
+        jsr dcLED    ;if pest detection is running flash LEDs then go to DC motor service
 pstDC:
-        ldaa Counter
+        ldaa Counter  ;load and increment counter (up to 60)
         inca
         staa Counter
-        cmpa tON
-        ble  s1
+        cmpa tON       ;compare counter to tON value set for DC motor
+        ble  s1        ;if it is less than keep motor on
         cmpa #60
-        ble s2
+        ble s2         ;if it is greater than tON but less than 60 turn motor off
         ldaa #$00
-        staa Counter
+        staa Counter   ;otherwise reset counter and exit
         movb #$80,CRGFLG
         rts
         s1:
@@ -566,8 +569,8 @@ pstDC:
            bclr port_t,#%00001000
            rts
 STPmtr:
-       ldaa rtiCtrl
-       bita #%00001000
+       ldaa rtiCtrl   ;loads control flags then checks for
+       bita #%00001000 ;which stepper routine to run
        bne seeder
        bita #%00010000
        bne harvester
@@ -577,26 +580,26 @@ STPmtr:
        
        
 harvester:
-       ldd Counter2
+       ldd Counter2   ;checks to see if there is a sufficient delay to send next pattern to stepper motor
        addd #1
        std Counter2
        cpd #150
        bne endSTP
-       movw #00,Counter2
-       ldab STPcnt
-       ldx #seq
-       abx
+       movw #00,Counter2 ;if counter has reached 1.5ms reset counter
+       ldab STPcnt     ;loads index of current pattern
+       ldx #seq        ;loads sequence
+       abx             ;adds index to address to find proper pattern
        ldaa 0,X
-       staa port_p
-       decb
-       bmi rstcnt1
+       staa port_p     ;sends pattern to motor
+       decb            ;decrements index
+       bmi rstcnt1     ;if less than zero reset index
        stab STPcnt
        rts
 rstcnt1:
-       movb #03,STPcnt
+       movb #03,STPcnt ;reset index
        rts
        
-seeder:
+seeder:                ;similar to above but index counts up instead of down
        ldd Counter2
        addd #1
        std Counter2
@@ -617,7 +620,7 @@ rstcnt2:
        movb #00,STPcnt
        rts
 
-chisel:
+chisel:              ;same as top but delay between patterns is less making motor faster
        ldd Counter2
        addd #1
        std Counter2
@@ -641,35 +644,35 @@ endSTP:
        rts
 
 
-dcLED:
-      ldd timer
+dcLED:       ;LED pattern control
+      ldd timer  ;loads timer and checks if it is a multiple of 1000
       ldx #1000
       idiv
       cpd #00
-      beq Pattern
+      beq Pattern   ;if it is then display the next pattern
       rts
 Pattern:
-      ldaa rtiCtrl
+      ldaa rtiCtrl     ;checks what kind of LEDs need to be displayed
       bita #%10000000
       bne fert0
       
 ;water LEDS 
-      xgdx
-      ldx #2
+      xgdx          ;places result of counter/1000 in D
+      ldx #2  ;divides by two to check if result was even
       idiv
-      cpd #00
+      cpd #00   ;if result was even display first water pattern
       bne wtr1
       ldx #wtrLED
       ldaa 0,X
       staa port_s
       rts
-wtr1:
+wtr1:            ;if result was odd display second pattern
       ldx #wtrLED
       ldaa 1,X
       staa port_s
       rts
 
-
+                  ;same as above except using fertilizer LED pattern
 fert0:
       xgdx
       ldx #2
@@ -687,7 +690,7 @@ fert1:
       rts      
 
 
-
+ ;if IRQ button is pressed set the pest detection flag
 IRQ_ISR:
 		movb #1,pstdtct
 		rti
