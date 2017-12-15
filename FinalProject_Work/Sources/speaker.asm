@@ -2,7 +2,7 @@
 	XREF loc,SendsChr,rtiCtrl,PlayTone,timer2
 	
 speaker:
-    	ldd timer2
+    	ldd timer2    ;timer to control speed of song
     	cpd #600
     	bne Leave
     	movw #0000,timer2
